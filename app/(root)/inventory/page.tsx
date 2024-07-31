@@ -20,7 +20,7 @@ const Inventory: React.FC = () => {
     fetchItems();
   }, []);
 
-  console.log("Items state:", items); // Debugging
+  
 
   return (
     <div>

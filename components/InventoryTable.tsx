@@ -23,7 +23,23 @@ import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { Button } from "@mui/material";
 import InventoryForm from "./InventoryForm";
-import { GetItemInterface, getItems } from "@/lib/actions/item.actions";
+import {
+  // delItem,
+  GetItemInterface,
+  getItems,
+} from "@/lib/actions/item.actions";
+import UpgradeIcon from "@mui/icons-material/Upgrade";
+
+import {
+  collection,
+  addDoc,
+  getDocs,
+  query,
+  onSnapshot,
+  deleteDoc,
+  doc,
+} from "firebase/firestore";
+import { db } from "@/app/firebase";
 
 export interface ItemInterface {
   id: string;
@@ -106,7 +122,8 @@ function stableSort<T>(
   array: readonly T[],
   comparator: (a: T, b: T) => number
 ) {
-  const stabilizedThis = array&&array.map((el, index) => [el, index] as [T, number]);
+  const stabilizedThis =
+    array && array.map((el, index) => [el, index] as [T, number]);
   stabilizedThis.sort((a, b) => {
     const order = comparator(a[0], b[0]);
     if (order !== 0) {
@@ -195,7 +212,9 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         <TableCell padding="checkbox">
           <Checkbox
             color="primary"
-            indeterminate={Number(numSelected) > 0 && Number(numSelected) < rowCount}
+            indeterminate={
+              Number(numSelected) > 0 && Number(numSelected) < rowCount
+            }
             checked={rowCount > 0 && Number(numSelected) === rowCount}
             onChange={onSelectAllClick}
             inputProps={{
@@ -231,11 +250,37 @@ function EnhancedTableHead(props: EnhancedTableProps) {
 
 interface EnhancedTableToolbarProps {
   numSelected: number;
+  selected: readonly string[];
+  fetchData: () => void;
 }
 
 function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const { numSelected } = props;
+  const { selected } = props;
+  const { fetchData } = props;
+  console.log(selected);
+  const delItem = async (id: string) => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "items"));
 
+    querySnapshot.forEach(async (docu) => {
+      
+     
+      const docRef = doc(db, "items", docu.id);
+      console.log(docRef);
+    await deleteDoc(docRef);
+    });
+    } catch (err) {
+      console.error("Error getting items:", err);
+      if (err instanceof Error) {
+        throw new Error(`Error: ${err.message}`);
+      } else {
+        throw new Error(`${JSON.stringify(err)}`);
+      }
+    } finally {
+      fetchData();
+    }
+  };
   return (
     <Toolbar
       sx={{
@@ -271,11 +316,27 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
       )}
 
       {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton>
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          <Tooltip title="Delete">
+            <IconButton
+              onClick={async () => {
+                console.log(selected);
+                for (const item of selected) {
+                  console.log("288", item);
+                  await delItem(item);
+                }
+                // Refresh data after deletion
+              }}
+            >
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip title="Update">
+            <IconButton>
+              <UpgradeIcon />
+            </IconButton>
+          </Tooltip>
+        </>
       ) : (
         <Tooltip title="Filter list">
           <IconButton>
@@ -286,11 +347,14 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
     </Toolbar>
   );
 }
-export default function InventoryTable({items}:{items:GetItemInterface[]}) {
-
+export default function InventoryTable({
+  items,
+}: {
+  items: GetItemInterface[];
+}) {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof ItemInterface>("sku");
-  const [selected, setSelected] = React.useState<readonly number[]>([]);
+  const [selected, setSelected] = React.useState<readonly string[]>([]);
   const [page, setPage] = React.useState(0);
   const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
@@ -305,32 +369,32 @@ export default function InventoryTable({items}:{items:GetItemInterface[]}) {
     React.useState<keyof ItemInterface>("location");
 
   const [isAddItem, setIsAddItem] = React.useState(false);
-  
-  const [rows,setRows]=React.useState<ItemInterface[]>([]);
 
-React.useEffect(()=>{
+  const [rows, setRows] = React.useState<ItemInterface[]>([]);
+
   const fetchData = async () => {
     try {
-    console.log(items)
-      const formattedRows = items&&items.map((item) =>
-        createData(
-          item.id,
-          item.name,
-          item.sku,
-          item.price,
-          item.quantity,
-          item.location
-        )
-      );
-      console.log(formattedRows)
-      setRows(formattedRows); 
+      const formattedRows =
+        items &&
+        items.map((item) =>
+          createData(
+            item.id,
+            item.name,
+            item.sku,
+            item.price,
+            item.quantity,
+            item.location
+          )
+        );
+      console.log(formattedRows);
+      setRows(formattedRows);
     } catch (error) {
       console.error("Error fetching items:", error);
     }
   };
-  fetchData()
-  
-},[])
+  React.useEffect(() => {
+    fetchData();
+  }, []);
   const handleRequestSort = (
     event: React.MouseEvent<unknown>,
     property: keyof ItemInterface
@@ -342,16 +406,17 @@ React.useEffect(()=>{
 
   const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.checked && items) {
-      const newSelected = items.map((n) => Number(n.id));
+      const newSelected = items.map((n) => n.id);
       setSelected(newSelected);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: number) => {
+  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+    console.log(id);
     const selectedIndex = selected.indexOf(id);
-    let newSelected: readonly number[] = [];
+    let newSelected: readonly string[] = [];
 
     if (selectedIndex === -1) {
       newSelected = newSelected.concat(selected, id);
@@ -383,7 +448,7 @@ React.useEffect(()=>{
     setDense(event.target.checked);
   };
 
-  const isSelected = (id: number) => selected.indexOf(id) !== -1;
+  const isSelected = (id: string) => selected.indexOf(id) !== -1;
 
   // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
@@ -397,22 +462,29 @@ React.useEffect(()=>{
       ),
     [order, orderBy, page, rowsPerPage]
   );
-
+  console.log(selected);
   return (
     <Box sx={{ width: "90vw" }}>
       <Paper sx={{ width: "100%", mb: 2 }}>
-        <EnhancedTableToolbar numSelected={selected.length} />
+        <EnhancedTableToolbar
+          numSelected={selected.length}
+          selected={selected}
+          fetchData={fetchData}
+        />
         <Button
           variant="contained"
           color="success"
           onClick={() => {
-            setIsAddItem(!isAddItem)}}
+            setIsAddItem(!isAddItem);
+          }}
         >
           Add Item
         </Button>
-        {isAddItem && <div>
-          <InventoryForm/>
-          </div>}
+        {isAddItem && (
+          <div>
+            <InventoryForm fetchData={fetchData} />
+          </div>
+        )}
         <TableContainer>
           <Table
             sx={{ minWidth: 750 }}
@@ -429,13 +501,13 @@ React.useEffect(()=>{
             />
             <TableBody>
               {visibleRows.map((row, index) => {
-                const isItemSelected = isSelected(Number(row.id));
+                const isItemSelected = isSelected(row.id);
                 const labelId = `enhanced-table-checkbox-${index}`;
 
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, Number(row.id))}
+                    onClick={(event) => handleClick(event, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}

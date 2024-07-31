@@ -1,6 +1,6 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
 import { TextField, Button, Box } from "@mui/material";
-import { addItem } from "@/lib/actions/item.actions";
+import { addItem, getItems } from "@/lib/actions/item.actions";
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { auth } from "@/app/firebase";
 
@@ -11,7 +11,7 @@ export interface CreateItemInterface {
   price: string;
   location: string;
 }
-export const InventoryForm: React.FC = () => {
+export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
     const [user, setUser] = useState<any>(null);
     
   const [formData, setFormData] = useState<CreateItemInterface>({
@@ -40,10 +40,18 @@ export const InventoryForm: React.FC = () => {
     return () => unsubscribe();
   }, []);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleSubmit = async () => {
+    
     console.log("Form data submitted:", formData);
     await addItem(formData)
+    setFormData({
+        name: "",
+        sku: "",
+        price: "",
+        quantity: "",
+        location: "",
+      })
+      fetchData()
   };
 
   return (
@@ -52,7 +60,7 @@ export const InventoryForm: React.FC = () => {
       sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
       noValidate
       autoComplete="off"
-      onSubmit={handleSubmit}
+      onSubmit={()=>handleSubmit()}
     >
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
