@@ -21,7 +21,7 @@ import Switch from "@mui/material/Switch";
 import DeleteIcon from "@mui/icons-material/Delete";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
-import { Button } from "@mui/material";
+import { Button, TextField } from "@mui/material";
 import InventoryForm from "./InventoryForm";
 import {
   // delItem,
@@ -38,6 +38,8 @@ import {
   onSnapshot,
   deleteDoc,
   doc,
+  updateDoc,
+  getDoc,
 } from "firebase/firestore";
 import { db } from "@/app/firebase";
 
@@ -151,42 +153,42 @@ const headCells: readonly HeadCell[] = [
   {
     id: "name",
     numeric: false,
-    disablePadding: true,
-    label: "Item Name",
+    disablePadding: false,
+    label: "ITEM NAME",
   },
   {
     id: "sku",
     numeric: true,
     disablePadding: false,
-    label: "sku",
+    label: "SKU",
   },
   {
     id: "price",
     numeric: true,
     disablePadding: false,
-    label: "price ($)",
+    label: "PRICE ($)",
   },
   {
     id: "quantity",
     numeric: true,
     disablePadding: false,
-    label: "quantity (ct)",
+    label: "QTY (ct)",
   },
   {
     id: "location",
     numeric: true,
     disablePadding: false,
-    label: "location ",
+    label: "LOCATION",
   },
 ];
 
 interface EnhancedTableProps {
   numSelected: string;
   onRequestSort: (
-    event: React.MouseEvent<unknown>,
+    e: React.MouseEvent<unknown>,
     property: keyof ItemInterface
   ) => void;
-  onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onSelectAllClick: (e: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
   orderBy: string;
   rowCount: number;
@@ -202,8 +204,8 @@ function EnhancedTableHead(props: EnhancedTableProps) {
     onRequestSort,
   } = props;
   const createSortHandler =
-    (property: keyof ItemInterface) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
+    (property: keyof ItemInterface) => (e: React.MouseEvent<unknown>) => {
+      onRequestSort(e, property);
     };
 
   return (
@@ -224,6 +226,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
+          style={{textAlign:"center",fontWeight:700}}
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
@@ -262,14 +265,16 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const delItem = async (id: string) => {
     try {
       const querySnapshot = await getDocs(collection(db, "items"));
+    
+      for (const docu of querySnapshot.docs) {
+        for(const sel of selected){
 
-    querySnapshot.forEach(async (docu) => {
-      
-     
-      const docRef = doc(db, "items", docu.id);
-      console.log(docRef);
-    await deleteDoc(docRef);
-    });
+          if (docu.data().id === sel) {
+            const docRef = doc(db, "items", docu.id);
+            await deleteDoc(docRef);
+          }
+        }
+      }
     } catch (err) {
       console.error("Error getting items:", err);
       if (err instanceof Error) {
@@ -278,7 +283,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         throw new Error(`${JSON.stringify(err)}`);
       }
     } finally {
-      fetchData();
+      window.location.reload()
     }
   };
   return (
@@ -331,11 +336,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-          <Tooltip title="Update">
-            <IconButton>
-              <UpgradeIcon />
-            </IconButton>
-          </Tooltip>
+        
         </>
       ) : (
         <Tooltip title="Filter list">
@@ -349,8 +350,10 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
 }
 export default function InventoryTable({
   items,
+  setItems,
 }: {
   items: GetItemInterface[];
+  setItems: React.Dispatch<React.SetStateAction<ItemInterface[]>>;
 }) {
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof ItemInterface>("sku");
@@ -367,10 +370,76 @@ export default function InventoryTable({
     React.useState<keyof ItemInterface>("quantity");
   const [location, setLocation] =
     React.useState<keyof ItemInterface>("location");
-
   const [isAddItem, setIsAddItem] = React.useState(false);
-
   const [rows, setRows] = React.useState<ItemInterface[]>([]);
+
+  type EditMode = {
+    rowId: string;
+    field: keyof ItemInterface;
+  } | null;
+  const [editMode, setEditMode] = React.useState<EditMode>(null);
+  const [editValue, setEditValue] = React.useState<string>("");
+
+  const handleCellClick = (
+    rowId: string,
+    field: keyof ItemInterface,
+    value: string
+  ) => {
+    if (field === "id") return;
+    setEditMode({ rowId, field });
+    setEditValue(value);
+  };
+
+  const handleCellChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setEditValue(e.target.value);
+  };
+
+  const handleEditSubmit: React.KeyboardEventHandler<HTMLInputElement> = async (
+    e
+  ) => {
+    if (e.key === "Enter" && editMode) {
+      const { rowId, field } = editMode;
+
+      try {
+        const querySnapshot = await getDocs(collection(db, "items"));
+
+        for (const docu of querySnapshot.docs) {
+          if (docu.data().id === rowId) {
+            const docRef = doc(db, "items", docu.id);
+            await updateDoc(docRef, {
+              [field]: editValue,
+            });
+          }
+        }
+
+        // Use getItems to fetch the updated data
+        const itemList = await getItems();
+        console.log("Fetched itemList:", itemList);
+        setItems(itemList);
+
+        const formattedRows = itemList.map((item: GetItemInterface) =>
+          createData(
+            item.id,
+            item.name,
+            item.sku,
+            item.price,
+            item.quantity,
+            item.location
+          )
+        );
+        console.log(formattedRows);
+        setRows(formattedRows);
+      } catch (error) {
+        console.error("Error updating document:", error);
+      } finally {
+        // Fetch updated data and update state
+
+        setEditMode(null);
+        setEditValue("");
+        window.location.reload();
+      }
+    }
+  };
 
   const fetchData = async () => {
     try {
@@ -396,7 +465,7 @@ export default function InventoryTable({
     fetchData();
   }, []);
   const handleRequestSort = (
-    event: React.MouseEvent<unknown>,
+    e: React.MouseEvent<unknown>,
     property: keyof ItemInterface
   ) => {
     const isAsc = orderBy === property && order === "asc";
@@ -404,8 +473,8 @@ export default function InventoryTable({
     setOrderBy(property);
   };
 
-  const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked && items) {
+  const handleSelectAllClick = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.checked && items) {
       const newSelected = items.map((n) => n.id);
       setSelected(newSelected);
       return;
@@ -413,7 +482,7 @@ export default function InventoryTable({
     setSelected([]);
   };
 
-  const handleClick = (event: React.MouseEvent<unknown>, id: string) => {
+  const handleClick = (e: React.MouseEvent<unknown>, id: string) => {
     console.log(id);
     const selectedIndex = selected.indexOf(id);
     let newSelected: readonly string[] = [];
@@ -433,19 +502,17 @@ export default function InventoryTable({
     setSelected(newSelected);
   };
 
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (e: unknown, newPage: number) => {
     setPage(newPage);
   };
 
-  const handleChangeRowsPerPage = (
-    event: React.ChangeEvent<HTMLInputElement>
-  ) => {
-    setRowsPerPage(parseInt(event.target.value, 10));
+  const handleChangeRowsPerPage = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setRowsPerPage(parseInt(e.target.value, 10));
     setPage(0);
   };
 
-  const handleChangeDense = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setDense(event.target.checked);
+  const handleChangeDense = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setDense(e.target.checked);
   };
 
   const isSelected = (id: string) => selected.indexOf(id) !== -1;
@@ -473,7 +540,7 @@ export default function InventoryTable({
         />
         <Button
           variant="contained"
-          color="success"
+          sx={{backgroundColor:"black"}}
           onClick={() => {
             setIsAddItem(!isAddItem);
           }}
@@ -507,7 +574,7 @@ export default function InventoryTable({
                 return (
                   <TableRow
                     hover
-                    onClick={(event) => handleClick(event, row.id)}
+                    onClick={(e) => handleClick(e, row.id)}
                     role="checkbox"
                     aria-checked={isItemSelected}
                     tabIndex={-1}
@@ -524,26 +591,40 @@ export default function InventoryTable({
                         }}
                       />
                     </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.id}
-                    </TableCell>
-                    <TableCell
-                      component="th"
-                      id={labelId}
-                      scope="row"
-                      padding="none"
-                    >
-                      {row.name}
-                    </TableCell>
-                    <TableCell align="right">{row.sku}</TableCell>
-                    <TableCell align="right">{row.price}</TableCell>
-                    <TableCell align="right">{row.quantity}</TableCell>
-                    <TableCell align="right">{row.location}</TableCell>
+
+                    {["id", "name", "sku", "price", "quantity", "location"].map(
+                      (field) => (
+                        <TableCell
+                        style={{textAlign:"center"}}
+                          key={field}
+                          component="th"
+                          id={labelId}
+                          scope="row"
+                          padding="none"
+                          onClick={() => {
+                            console.log(row.id);
+                            handleCellClick(
+                              row.id,
+                              field as keyof ItemInterface,
+                              row[field as keyof ItemInterface]
+                            );
+                          }}
+                        >
+                          {editMode &&
+                          editMode.rowId === row.id &&
+                          editMode.field === field ? (
+                            <TextField
+                              value={editValue}
+                              onChange={handleCellChange}
+                              onKeyDown={handleEditSubmit}
+                              autoFocus
+                            />
+                          ) : (
+                            row[field as keyof ItemInterface]
+                          )}
+                        </TableCell>
+                      )
+                    )}
                   </TableRow>
                 );
               })}

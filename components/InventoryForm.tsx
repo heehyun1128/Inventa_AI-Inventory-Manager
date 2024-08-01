@@ -1,7 +1,7 @@
 import React, { useState, ChangeEvent, FormEvent, useEffect } from "react";
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Button, Box, Alert } from "@mui/material";
 import { addItem, getItems } from "@/lib/actions/item.actions";
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 import { auth } from "@/app/firebase";
 
 export interface CreateItemInterface {
@@ -11,9 +11,12 @@ export interface CreateItemInterface {
   price: string;
   location: string;
 }
-export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
-    const [user, setUser] = useState<any>(null);
-    
+export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
+  fetchData,
+}) => {
+  const [user, setUser] = useState<any>(null);
+  const [isNoSKU, setIsNoSKU] = useState<Boolean>(false);
+
   const [formData, setFormData] = useState<CreateItemInterface>({
     name: "",
     sku: "",
@@ -40,18 +43,28 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
     return () => unsubscribe();
   }, []);
 
-  const handleSubmit = async () => {
-    
-    console.log("Form data submitted:", formData);
-    await addItem(formData)
-    setFormData({
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    if (!formData.sku) {
+      e.preventDefault();
+      
+      setIsNoSKU(true)
+      return;
+    }
+
+    try {
+      await addItem(formData);
+      setFormData({
         name: "",
         sku: "",
         price: "",
         quantity: "",
         location: "",
-      })
-      fetchData()
+      });
+      setIsNoSKU(false)
+      fetchData();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
   };
 
   return (
@@ -60,8 +73,11 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
       sx={{ "& .MuiTextField-root": { m: 1, width: "25ch" } }}
       noValidate
       autoComplete="off"
-      onSubmit={()=>handleSubmit()}
+      onSubmit={handleSubmit}
     >
+       {isNoSKU && <Alert variant="filled" severity="error">
+  This is a filled error Alert.
+</Alert>}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
           <TextField
@@ -70,7 +86,8 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
             name="name"
             value={formData.name}
             onChange={handleChange}
-            required
+            // required
+            style={{ width: "14vw" }}
           />
           <TextField
             label="SKU"
@@ -79,6 +96,7 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
             value={formData.sku}
             onChange={handleChange}
             required
+            style={{ width: "14vw" }}
           />
           <TextField
             label="Price"
@@ -86,7 +104,8 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
             name="price"
             value={formData.price}
             onChange={handleChange}
-            required
+            // required
+            style={{ width: "14vw" }}
           />
           <TextField
             label="Quantity"
@@ -94,7 +113,8 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
             name="quantity"
             value={formData.quantity}
             onChange={handleChange}
-            required
+            // required
+            style={{ width: "14vw" }}
           />
           <TextField
             label="Location"
@@ -102,7 +122,8 @@ export const InventoryForm: React.FC<{fetchData:()=>void}> = ({fetchData}) => {
             name="location"
             value={formData.location}
             onChange={handleChange}
-            required
+            // required
+            style={{ width: "14vw" }}
           />
         </div>
         <Button variant="contained" color="primary" type="submit">

@@ -20,7 +20,12 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 import { useRouter } from "next/navigation";
-
+import Link from "next/link";
+import Image from "next/image";
+import logo from "../public/images/s-logo.png";
+import DashboardIcon from "@mui/icons-material/Dashboard";
+import InventoryIcon from "@mui/icons-material/Inventory";
+import CameraIcon from "@mui/icons-material/Camera";
 
 const drawerWidth = 240;
 
@@ -96,7 +101,7 @@ const Drawer = styled(MuiDrawer, {
 export default function MiniDrawer() {
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
-  const router=useRouter()
+  const router = useRouter();
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -107,10 +112,18 @@ export default function MiniDrawer() {
   };
 
   return (
-    <Box style={{ width:"90vw", marginLeft:"30px"}}>
+    <Box style={{ width: "90vw", marginLeft: "30px" }}>
       <CssBaseline />
-      <AppBar position="fixed" open={open}>
-        <Toolbar>
+      <AppBar
+        position="fixed"
+        open={open}
+        
+      >
+        <Toolbar style={{
+          display: "flex",
+          justifyContent: "space-between",
+          backgroundColor: "rgb(43, 43, 43)",
+        }}>
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -123,9 +136,12 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Inventa Pantry Tracker
-          </Typography>
+        <Typography variant="h6" noWrap component="div">
+          <Link href="/" style={{ textDecoration: "none", color: "white" }}>
+            INVENTA
+          </Link>
+        </Typography>
+        <Typography variant="h6" noWrap component="div"></Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -146,7 +162,7 @@ export default function MiniDrawer() {
               disablePadding
               sx={{ display: "block" }}
               onClick={() => {
-                router.push(`/${text.toLowerCase()}`)
+                router.push(`/${text.toLowerCase()}`);
               }}
             >
               <ListItemButton
@@ -163,7 +179,13 @@ export default function MiniDrawer() {
                     justifyContent: "center",
                   }}
                 >
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
+                  {text === "Dashboard" ? (
+                    <DashboardIcon />
+                  ) : text === "Inventory" ? (
+                    <InventoryIcon />
+                  ) : (
+                    <CameraIcon />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
@@ -171,7 +193,6 @@ export default function MiniDrawer() {
           ))}
         </List>
         <Divider />
-    
       </Drawer>
       <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
         <DrawerHeader />
