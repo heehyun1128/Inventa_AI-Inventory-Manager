@@ -40,7 +40,7 @@ const Dashboard = () => {
                 Connect To Your Phone To Take A Picture Now.
               </h4>
             </div>
-            <CameraAltIcon className="dash-icon" onClick={()=>alert("Feature coming soon...")}/>
+            <CameraAltIcon className="dash-icon" onClick={()=>router.push("/cam")}/>
           </div>
           <div className="dashboard-cards card3">
             <div className="tracking-in-expand3">
