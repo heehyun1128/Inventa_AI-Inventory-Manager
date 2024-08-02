@@ -54,7 +54,7 @@ const Dashboard = () => {
                 Our AI-Powered Search Engine Helps You Find Items Faster.
               </h4>
             </div>
-            <SearchIcon className="dash-icon" onClick={()=>alert("Feature coming soon...")}/>
+            <SearchIcon className="dash-icon" onClick={()=>router.push("/search")}/>
           </div>
         </div>
       </div>

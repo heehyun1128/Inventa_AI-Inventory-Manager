@@ -228,12 +228,7 @@ const Cam = () => {
               console.log(photo);
               setImage(photo as string);
 
-              try {
-                const result = await uploadImageToOpenAI(photo);
-                console.log("Image analysis result:", result);
-              } catch (error) {
-                console.error("Error processing image:", error);
-              }
+           
             }
           }}
         />

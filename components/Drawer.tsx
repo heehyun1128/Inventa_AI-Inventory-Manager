@@ -26,6 +26,7 @@ import logo from "../public/images/s-logo.png";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CameraIcon from "@mui/icons-material/Camera";
+import PageviewIcon from '@mui/icons-material/Pageview';
 
 const drawerWidth = 240;
 
@@ -156,7 +157,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Dashboard", "Inventory", "Cam"].map((text, index) => (
+          {["Dashboard", "Inventory", "Cam","Search"].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -184,7 +185,7 @@ export default function MiniDrawer() {
                   ) : text === "Inventory" ? (
                     <InventoryIcon />
                   ) : (
-                    <CameraIcon />
+                    text === "Cam" ? <CameraIcon />:<PageviewIcon/>
                   )}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
