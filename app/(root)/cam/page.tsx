@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
 import { Camera, CameraType } from "../../../components/Camera";
-import { uploadImageToOpenAI } from "@/lib/actions/openai.actions";
+
 import Image from "next/image";
 
 const Wrapper = styled.div`

@@ -339,11 +339,12 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         
         </>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton>
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <></>
+        // <Tooltip title="Filter list">
+        //   <IconButton>
+        //     <FilterListIcon />
+        //   </IconButton>
+        // </Tooltip>
       )}
     </Toolbar>
   );
