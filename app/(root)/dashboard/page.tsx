@@ -37,7 +37,8 @@ const Dashboard = () => {
                 Capture Inventory Items In Real-Time?
               </h4>
               <h4 className="dashboard-description text-focus-in">
-                Connect To Your Phone To Take A Picture Now.
+                {/* Connect To Your Phone To  */}
+                Take A Picture Now.
               </h4>
             </div>
             <CameraAltIcon className="dash-icon" onClick={()=>router.push("/cam")}/>
@@ -51,7 +52,7 @@ const Dashboard = () => {
                 Finding Something Specific?
               </h4>
               <h4 className="dashboard-description text-focus-in">
-                Our AI-Powered Search Engine Helps You Find Items Faster.
+                Upload A Picture and Our AI Search Engine Will Assist You
               </h4>
             </div>
             <SearchIcon className="dash-icon" onClick={()=>router.push("/search")}/>
