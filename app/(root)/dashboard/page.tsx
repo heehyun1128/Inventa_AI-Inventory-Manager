@@ -13,7 +13,7 @@ const Dashboard = () => {
         className="dashboard-background"
         style={{ width: "100vw", display: "flex", justifyContent: "flex-end" }}
       >
-        <div style={{ display: "flex" }}>
+        <div className="dashboard-card-container">
           <div className="dashboard-cards card1">
             <div className=" tracking-in-expand">
               <h1 className="dashboard-title">INVENTORY</h1>
