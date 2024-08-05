@@ -43,8 +43,8 @@ export const ImageUploader: React.FC = () => {
   };
 
   return (
-    <div style={{ display: "flex", justifyContent: "center",alignContent:"center", width: "80vw", height:"80vh" }}>
-      <div style={{ display: "flex", flexDirection:"column",justifyContent: "center",alignContent:"center",height:"100%"}}>
+    <div className="image-uploader-container">
+      <div style={{ display: "flex", flexDirection:"column",justifyContent: "center",alignItems:"center",}}>
         <input
          style={{height:"40px"}}
           type="file"
@@ -56,7 +56,7 @@ export const ImageUploader: React.FC = () => {
             style={{
               display: "flex",
               flexDirection: "column",
-              alignContent: "center",
+              alignItems: "center",
               justifyContent: "center",
             }}
           >
@@ -67,13 +67,13 @@ export const ImageUploader: React.FC = () => {
               height={550}
               style={{marginBottom:"20px"}}
             />
-            <button onClick={handleSubmit}>Submit Image</button>
+            <button className="submit-img-btn" onClick={handleSubmit}>Submit Image</button>
           </div>
         )}
       </div>
       {picDescription !== "" ? (
         <div style={{ width: "30vw",display: "flex", justifyContent: "center",alignItems:"center" }}>
-          <div style={{height:"60vh",padding:"20px"}}>{JSON.stringify(picDescription, null, 2)}</div>
+          <div style={{height:"20vh",padding:"20px"}}>{JSON.stringify(picDescription, null, 2)}</div>
         </div>
       ) : (
         <div style={{ width: "30vw",height:"100px",display: "flex", justifyContent: "center",alignContent:"center" }}></div>
