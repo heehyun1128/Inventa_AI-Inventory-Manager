@@ -316,7 +316,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
           id="tableTitle"
           component="div"
         >
-          Pantry Items
+          Inventory Items
         </Typography>
       )}
 

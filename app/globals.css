@@ -470,11 +470,11 @@
   .sc-gsFSXq {
     flex-direction: column !important;
   }
-  button.sc-kAyceB.sc-imWYAI.irjgOo.eRXYRd {
+  button.sc-kAyceB{
     width: 60px !important;
     height: 60px !important;
-    position: fixed;
-    bottom: 310px;
+    position: fixed !important;
+    bottom: 310px !important;
   }
 
   .save-image-btn {
