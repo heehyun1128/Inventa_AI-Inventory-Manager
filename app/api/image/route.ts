@@ -25,7 +25,7 @@ export async function POST(req: Request) {
           content: [
             {
               type: "text",
-              text: "Create a brief description and details of all the items in this picture.",
+              text: "Just give me an one word answer for what object is in the picture (noun, no verb), such as apple, cat, women, etc..",
             },
             {
               type: "image_url",
@@ -40,7 +40,7 @@ export async function POST(req: Request) {
     });
 console.log(response.choices[0].message)
     // Return the response
-    return NextResponse.json({ message: response.choices[0].message.content});
+    return NextResponse.json({ object: response.choices[0].message.content});
   } catch (err) {
     console.error("Error processing request:", err);
 

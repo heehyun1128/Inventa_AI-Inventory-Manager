@@ -213,7 +213,7 @@ const Cam = () => {
             }}
           />
           {image && (
-            <button style={{height:"20px"}}>
+            <button className="save-image-btn">
 
             <a href={image} download="captured-image.jpg" style={{padding:"0",textDecoration:"none"}}>
               Save Image

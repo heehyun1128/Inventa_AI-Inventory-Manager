@@ -70,6 +70,24 @@
   color: rgb(49, 49, 49);
 }
 
+.save-image-btn {
+  height: 20px;
+}
+
+.image-uploader-container {
+  display: "flex";
+  justify-content: "center";
+  align-content: "center";
+  width: "80vw";
+  height: "80vh";
+}
+
+.submit-img-btn {
+  height: 30px;
+  border-radius: 5px;
+  color: black;
+}
+
 .puff-in-bottom {
   font-size: 8rem;
   -webkit-animation: puff-in-bottom 1.2s cubic-bezier(0.47, 0, 0.745, 0.715)
@@ -321,6 +339,7 @@
 .jello-horizontal {
   -webkit-animation: jello-horizontal 0.9s both;
   animation: jello-horizontal 0.9s both;
+  margin-bottom: 20px;
 }
 
 @-webkit-keyframes jello-horizontal {
@@ -384,22 +403,27 @@
   }
 }
 @media (max-width: 600px) {
- /* .MuiList-root {
+  /* .MuiList-root {
   display: none;
  } */
-/* .MuiDrawer-paper {
+  /* .MuiDrawer-paper {
   left: -100px;
 } */
-  .dashboard-background{
-    width:100vw;
-    max-width:100vw;
+  .css-zxdg2z {
+    padding: 0;
   }
-  .MuiToolbar-root{
+  .dashboard-background {
+    width: 100vw;
+    max-width: 100vw;
+  }
+
+  .MuiToolbar-root {
     width: 100vw !important;
   }
   .dashboard-card-container {
     flex-direction: column;
     justify-content: flex-start;
+    margin-left: 40px;
   }
   .dashboard-card-container .MuiSvgIcon-root {
     width: 50px;
@@ -408,7 +432,7 @@
 
   .dashboard-cards {
     font-size: 12px;
-    width: 260px;
+    width: 270px;
     height: 200px;
     margin: 10px 0;
   }
@@ -416,13 +440,74 @@
     font-size: 16px;
   }
 
-  .search-container{
+  .search-container {
     position: absolute;
     left: 60px;
     top: 100px;
   }
 
-  #video{
-    width: 350px;
+  #video {
+    width: 330px;
+    height: 60vh;
+  }
+  select {
+    display: none;
+  }
+  div.sc-gsFSXq.hEWakc {
+    position: fixed;
+    /* bottom: 170px; */
+    height: 400px;
+    display: flex;
+    flex-direction: column;
+  }
+  div.sc-iGgWBj.jMjaJa {
+    height: 60vh;
+  }
+
+  .puff-in-bottom {
+    font-size: 80px;
+  }
+  .sc-gsFSXq {
+    flex-direction: column !important;
+  }
+  button.sc-kAyceB.sc-imWYAI.irjgOo.eRXYRd {
+    width: 60px !important;
+    height: 60px !important;
+    position: fixed;
+    bottom: 310px;
+  }
+
+  .save-image-btn {
+    height: 30px;
+    margin-top: 50px;
+    position: fixed;
+    bottom: 60px;
+    left: 190px;
+    width: 120px;
+    border-radius: 5px;
+    color: black;
+  }
+
+  
+
+  div.sc-kpDqfm {
+    height: 200px;
+    width: 200px;
+    position: fixed;
+    bottom: 100px;
+    left: 150px;
+  }
+
+  h2.jello-horizontal {
+    font-size: 16px;
+    text-align: center;
+  }
+  .jello-horizontal {
+    font-size: 12px;
+    margin-top: 10px;
+    text-align: center;
+  }
+  .image-uploader-container {
+    flex-direction: column;
   }
 }
