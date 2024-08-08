@@ -1,3 +1,14 @@
+- Road Map
+
+  - Set up a Next.js project with Material UI components
+  - Implemented Firebase backend for data storage
+  - Created a form to add, delete, and update inventory items
+  - Added a search or filter functionality to easily find items
+  - Created a responsive frontend design to display all pantry items
+  - Deploy to Vercel and use CI/CD
+  - Enabled image capturing with browser camera
+  - Use GPT Vision API to classify images
+
 - This project is an AI Inventory Manager built with
   
   - TypeScript
