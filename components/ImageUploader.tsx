@@ -47,7 +47,7 @@ export const ImageUploader: React.FC = () => {
   };
 
   const addToInventory = () => {
-    const res = picDescription;
+    const res:any = picDescription;
     const cleanedRes = res.object
       .replace(/```json/g, "")
       .replace(/```/g, "")
