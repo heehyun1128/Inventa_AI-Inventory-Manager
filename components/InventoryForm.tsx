@@ -46,12 +46,13 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (!formData.sku) {
       e.preventDefault();
-      
-      setIsNoSKU(true)
+
+      setIsNoSKU(true);
       return;
     }
 
     try {
+     
       await addItem(formData);
       setFormData({
         name: "",
@@ -60,7 +61,7 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
         quantity: "",
         location: "",
       });
-      setIsNoSKU(false)
+      setIsNoSKU(false);
       fetchData();
     } catch (error) {
       console.error("Error submitting form:", error);
@@ -75,9 +76,11 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
       autoComplete="off"
       onSubmit={handleSubmit}
     >
-       {isNoSKU && <Alert variant="filled" severity="error">
-  This is a filled error Alert.
-</Alert>}
+      {isNoSKU && (
+        <Alert variant="filled" severity="error">
+          This is a filled error Alert.
+        </Alert>
+      )}
       <div style={{ display: "flex", justifyContent: "space-between" }}>
         <div>
           <TextField
