@@ -3,7 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import { Playfair_Display } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
-const inter = Inter({ subsets: ["latin"] });
+
 
 const playfairDisplay = Playfair_Display({
   subsets: ["latin"],

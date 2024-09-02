@@ -3,8 +3,14 @@ import React, { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { addItem } from "@/lib/actions/item.actions";
-import { Button,CircularProgress } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
+import {
+  parsePicDescription,
+  renderParsedDescription,
+} from "@/app/(root)/cam/page";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 
 export const addToInventory = (picDescription: string, qty: string) => {
   const res: any = picDescription;
@@ -26,8 +32,8 @@ export const ImageUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [picDescription, setPicDescription] = useState<string>("");
   const [qty, setQty] = useState<string>("");
-  const [loading, setLoading] = useState<boolean>(false); 
-
+  const [loading, setLoading] = useState<boolean>(false);
+  const [successAlert, setSuccessAlert] = useState<boolean>(false);
   const router = useRouter();
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,146 +67,238 @@ export const ImageUploader: React.FC = () => {
         console.log("Response from API:", response.data);
       } catch (error) {
         console.error("Error uploading image:", error);
-      }finally{
+      } finally {
         setLoading(false);
       }
     }
   };
 
   return (
-    <div className="image-uploader-container text-focus-in " style={{display:"flex", alignItems:"center", justifyContent:"center"}}>
-      <div
-        style={{
-          height: "50vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: "20px",
-        }}
-      >
-        <input
-          style={{ height: "40px" }}
-          type="file"
-          accept="image/*"
-          onChange={handleFileChange}
-        />
-        {image && (
-          <div
+    <>
+      {successAlert && (
+        <div
+          style={{
+            height: "40vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+            Successfully updated inventory!
+          </Alert>
+          <Button
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
+              cursor: "pointer",
+              backgroundColor: "black",
+              padding: "12px",
+              height: "30px",
+              color: "white",
+              margin: "30px",
+            }}
+            onClick={() => {
+              setSuccessAlert(false);
+              setPicDescription("")
+              setQty("")
+              setImage("")
+              setFile(null)
             }}
           >
-            <Image
-              src={image as string}
-              alt="Preview"
-              width={300}
-              height={400}
-              style={{ marginBottom: "20px", width: "100%", height: "auto" }}
-              layout="responsive"
-            />
-            {loading ? (  
-              <CircularProgress style={{ marginTop: "20px" }} />
-            ) : (
-              <Button
-                variant="contained"
-                className="submit-img-btn"
-                style={{
-                  cursor: "pointer",
-                  backgroundColor: "black",
-                  padding: "12px",
-                  color: "white",
-                }}
-                onClick={handleSubmit}
-              >
-                Submit Image
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
-      <div>
-        {picDescription !== "" ? (
+            Adding another item?
+          </Button>
+        </div>
+      )}
+      {!successAlert && (
+        <div
+          className="image-uploader-container text-focus-in "
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <div
             style={{
-              width: "100%",
+              height: "fit-content",
+              minHeight: "50vh",
               display: "flex",
               flexDirection: "column",
               justifyContent: "center",
               alignItems: "center",
+              marginTop: "20px",
+              // border:"1px dotted #536493",
+              minWidth: "45%",
+              borderRadius: "1rem",
+              padding: "10px",
             }}
           >
-            <div
-              style={{
-                height: "fit-content",
-                padding: "20px",
-                width: "100%",
-                display: "flex",
-                justifyContent: "center",
-              }}
-            >
-              <h2 style={{ marginBottom: "16px" }}>
-                Updating stock unit #
-                {
-                  JSON.parse(
-                    (picDescription as any).object
-                      .replace(/```json/g, "")
-                      .replace(/```/g, "")
-                      .replace(/\n/g, "")
-                      .trim()
-                  ).sku
-                }
-              </h2>
-            </div>
-            <h4 style={{ marginBottom: "16px" }}>Quantity</h4>
             <input
               style={{
-                height: "40px",
-                borderRadius: "10px",
-                padding: "10px",
-                marginBottom: "16px",
+                display: "none",
               }}
-              type="text"
-              placeholder="quantity"
-              value={qty}
-              onChange={(e) => setQty(e.target.value)}
+              type="file"
+              accept="image/*"
+              onChange={handleFileChange}
+              id="customFileInput"
             />
-            <p style={{ marginBottom: "16px" }}>Add Item to Inventory?</p>
-            <Button
-              style={{
-                cursor: "pointer",
-                backgroundColor: "black",
-                padding: "12px",
-                height: "30px",
-                color: "white",
-                marginBottom: "30px",
-              }}
+            <button
               onClick={() => {
-                addToInventory(picDescription, qty);
-                router.push("/inventory");
-                
-
+                setPicDescription("");
+                document.getElementById("customFileInput")?.click();
+              }}
+              style={{
+                height: "40px",
+                backgroundColor: "#536493",
+                color: "#fff",
+                border: "none",
+                padding: "10px 20px",
+                cursor: "pointer",
+                borderRadius: "4px",
               }}
             >
-              Confirm
-            </Button>
+              Choose File
+            </button>
+            <span id="fileName" style={{ marginTop: "10px" }}>
+              No file chosen
+            </span>
+            {image && (
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  width: "40vw",
+                }}
+              >
+                <Image
+                  src={image as string}
+                  alt="Preview"
+                  width={200}
+                  height={300}
+                  style={{
+                    marginBottom: "20px",
+                    maxWidth: "26vw",
+                    height: "auto",
+                  }}
+                  layout="responsive"
+                />
+                {loading ? (
+                  <CircularProgress style={{ marginTop: "20px" }} />
+                ) : (
+                  <Button
+                    variant="contained"
+                    className="submit-img-btn"
+                    style={{
+                      cursor: "pointer",
+                      backgroundColor: "#536493",
+                      padding: "12px",
+                      color: "white",
+                      height: "40px",
+                    }}
+                    onClick={handleSubmit}
+                  >
+                    Submit Image
+                  </Button>
+                )}
+              </div>
+            )}
           </div>
-        ) : (
-          <div
-            style={{
-              width: "30vw",
-              height: "100px",
-              display: "flex",
-              justifyContent: "center",
-              alignContent: "center",
-            }}
-          ></div>
-        )}
-      </div>
-    </div>
+          <div>
+            {picDescription !== "" ? (
+              <div
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {renderParsedDescription(
+                  parsePicDescription(picDescription)
+                ) !== "No Sku found. Please try again." ? (
+                  <div
+                    style={{
+                      height: "fit-content",
+                      padding: "20px",
+                      width: "100%",
+                      display: "flex",
+                      flexDirection: "column",
+                      justifyContent: "center",
+                    }}
+                  >
+                    <h2 style={{ marginBottom: "16px" }}>
+                      Updating stock unit #
+                      {
+                        JSON.parse(
+                          (picDescription as any).object
+                            .replace(/```json/g, "")
+                            .replace(/```/g, "")
+                            .replace(/\n/g, "")
+                            .trim()
+                        ).sku
+                      }
+                    </h2>
+                    <h4 style={{ marginBottom: "16px" }}>Quantity</h4>
+                    <input
+                      style={{
+                        height: "40px",
+                        borderRadius: "10px",
+                        padding: "10px",
+                        marginBottom: "16px",
+                      }}
+                      type="text"
+                      placeholder="quantity"
+                      value={qty}
+                      onChange={(e) => setQty(e.target.value)}
+                    />
+                    <p style={{ marginBottom: "16px" }}>
+                      Add Item to Inventory?
+                    </p>
+                    <Button
+                      style={{
+                        cursor: "pointer",
+                        backgroundColor: "black",
+                        padding: "12px",
+                        height: "30px",
+                        color: "white",
+                        marginBottom: "30px",
+                      }}
+                      onClick={() => {
+                        addToInventory(picDescription, qty);
+                        // router.push("/inventory");
+                        setSuccessAlert(true);
+                      }}
+                    >
+                      Confirm
+                    </Button>
+                  </div>
+                ) : (
+                  <p style={{ color: "#536493" }}>
+                    {picDescription &&
+                      renderParsedDescription(
+                        parsePicDescription(picDescription)
+                      )}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <div
+                style={{
+                  width: "30vw",
+                  height: "100px",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignContent: "center",
+                }}
+              ></div>
+            )}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 

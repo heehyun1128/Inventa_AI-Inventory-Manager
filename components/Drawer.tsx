@@ -28,6 +28,7 @@ import InventoryIcon from "@mui/icons-material/Inventory";
 import CameraIcon from "@mui/icons-material/Camera";
 import PageviewIcon from "@mui/icons-material/Pageview";
 import { Tooltip } from "@mui/material";
+import { Nerko_One } from "next/font/google"; 
 
 const drawerWidth = 240;
 
@@ -121,7 +122,7 @@ export default function MiniDrawer() {
           style={{
             display: "flex",
             justifyContent: "space-between",
-            backgroundColor: "#F6F4EB",
+            backgroundColor: "#30302f",
           }}
         >
           <IconButton
@@ -141,9 +142,10 @@ export default function MiniDrawer() {
               href="/"
               style={{
                 textDecoration: "none",
-                color: "#536493",
+                color: "white",
                 fontWeight: "bold",
-                fontSize:"30px"
+                fontSize:"30px",
+                fontFamily:"Nerko_One"
               }}
             >
               iNVENTa
