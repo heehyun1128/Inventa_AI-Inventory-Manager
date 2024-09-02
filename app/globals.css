@@ -27,8 +27,9 @@
   width: 100vw;
 } */
 .dashboard-background {
-  background: url("../public/images/dashboard-bgi.jpg") no-repeat center center;
+  /* background: url("../public/images/dashboard-bgi.jpg") no-repeat center center; */
   background-size: cover;
+  background-color: #f1d6ab;
   color: white;
   text-align: center;
 
@@ -48,7 +49,7 @@
 }
 .dashboard-cards {
   padding: 10px;
-  background-color: rgb(255, 255, 255, 0.8);
+  background-color: rgb(255, 255, 255);
   width: 18vw;
   height: 50vh;
   border-radius: 2rem;
@@ -71,7 +72,13 @@
 }
 
 .save-image-btn {
-  height: 20px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 8px;
+}
+.save-image-btn a {
+  color: #2b2b28;
 }
 
 .image-uploader-container {
@@ -328,8 +335,8 @@
   }
 }
 .dash-icon {
-  font-size: 100px;
-  color: rgb(89, 89, 89);
+  font-size: 80px;
+  color: #2b2b28;
 }
 .dash-icon:hover {
   font-size: 105px;
@@ -470,7 +477,7 @@
   .sc-gsFSXq {
     flex-direction: column !important;
   }
-  button.sc-kAyceB{
+  button.sc-kAyceB {
     width: 60px !important;
     height: 60px !important;
     position: fixed !important;
@@ -487,8 +494,6 @@
     border-radius: 5px;
     color: black;
   }
-
-  
 
   div.sc-kpDqfm {
     height: 200px;
@@ -512,4 +517,6 @@
   }
 }
 
-
+.dashboard-btn:hover {
+  color: orange;
+}

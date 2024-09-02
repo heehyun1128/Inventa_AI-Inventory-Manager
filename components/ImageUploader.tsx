@@ -3,13 +3,31 @@ import React, { useState } from "react";
 import axios from "axios";
 import Image from "next/image";
 import { addItem } from "@/lib/actions/item.actions";
+import { Button } from "@mui/material";
+
+
+
+export const addToInventory = (picDescription:string,qty:string) => {
+  const res: any = picDescription;
+  console.log(picDescription)
+
+  const cleanedRes = res?.object
+    .replace(/```json/g, "")
+    .replace(/```/g, "")
+    .replace(/\n/g, "")
+    .trim();
+  const jsonObject = JSON.parse(cleanedRes);
+  jsonObject["quantity"] = Number(qty);
+  console.log(jsonObject);
+  addItem(jsonObject);
+};
+
 
 export const ImageUploader: React.FC = () => {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [picDescription, setPicDescription] = useState<string>("");
   const [qty, setQty] = useState<string>("");
-
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -46,18 +64,7 @@ export const ImageUploader: React.FC = () => {
     }
   };
 
-  const addToInventory = () => {
-    const res:any = picDescription;
-    const cleanedRes = res.object
-      .replace(/```json/g, "")
-      .replace(/```/g, "")
-      .replace(/\n/g, "")
-      .trim();
-      const jsonObject = JSON.parse(cleanedRes)
-      jsonObject["quantity"]=Number(qty)
-      console.log(jsonObject)
-    addItem(jsonObject);
-  };
+   
 
   return (
     <div className="image-uploader-container text-focus-in ">
@@ -94,13 +101,20 @@ export const ImageUploader: React.FC = () => {
               style={{ marginBottom: "20px", width: "100%", height: "auto" }}
               layout="responsive"
             />
-            <button
+            <Button
+              variant="contained"
               className="submit-img-btn"
-              style={{ cursor: "pointer" }}
+              style={{
+                cursor: "pointer",
+                backgroundColor: "black",
+                padding: "12px",
+               
+                color: "white",
+              }}
               onClick={handleSubmit}
             >
               Submit Image
-            </button>
+            </Button>
           </div>
         )}
       </div>
@@ -125,7 +139,7 @@ export const ImageUploader: React.FC = () => {
             onChange={(e) => setQty(e.target.value)}
           />
           <p>Add Item to Inventory?</p>
-          <button onClick={addToInventory}>Confirm</button>
+          <Button onClick={()=>addToInventory(picDescription,qty)}>Confirm</Button>
         </div>
       ) : (
         <div

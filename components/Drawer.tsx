@@ -26,7 +26,7 @@ import logo from "../public/images/s-logo.png";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CameraIcon from "@mui/icons-material/Camera";
-import PageviewIcon from '@mui/icons-material/Pageview';
+import PageviewIcon from "@mui/icons-material/Pageview";
 
 const drawerWidth = 240;
 
@@ -115,16 +115,14 @@ export default function MiniDrawer() {
   return (
     <Box style={{ width: "90vw", marginLeft: "30px" }}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        open={open}
-        
-      >
-        <Toolbar style={{
-          display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "rgb(43, 43, 43)",
-        }}>
+      <AppBar position="fixed" open={open}>
+        <Toolbar
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            backgroundColor: "white",
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -137,12 +135,20 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          <Link href="/" style={{ textDecoration: "none", color: "white" }}>
-            INVENTA
-          </Link>
-        </Typography>
-        <Typography variant="h6" noWrap component="div"></Typography>
+          <Typography variant="h6" noWrap component="div">
+            <Link
+              href="/"
+              style={{
+                textDecoration: "none",
+                color: "#2B2B28",
+                fontWeight: "bold",
+                fontSize:"30px"
+              }}
+            >
+              INVENTA
+            </Link>
+          </Typography>
+          <Typography variant="h6" noWrap component="div"></Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -157,7 +163,7 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Dashboard", "Inventory", "Cam","Search"].map((text, index) => (
+          {["Dashboard", "Inventory", "Cam", "Search"].map((text, index) => (
             <ListItem
               key={text}
               disablePadding
@@ -184,8 +190,10 @@ export default function MiniDrawer() {
                     <DashboardIcon />
                   ) : text === "Inventory" ? (
                     <InventoryIcon />
+                  ) : text === "Cam" ? (
+                    <CameraIcon />
                   ) : (
-                    text === "Cam" ? <CameraIcon />:<PageviewIcon/>
+                    <PageviewIcon />
                   )}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />

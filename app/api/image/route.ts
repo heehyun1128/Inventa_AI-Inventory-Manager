@@ -33,7 +33,9 @@ export async function POST(req: Request) {
                     Name: The Name of the item, typically is something in the inventory, like device,tool, accessaries
                     Price: The price, which is in the format of a dollar sign followed by a numeric value, such as '$99.99'.
                     Location: The location, which is typically a word like 'Aisle' followed by a number.
-                    The image text may vary in format, but it will always contain these three pieces of information. Return the extracted information in this JSON format:
+                    if any of name, price, location is not found, their value will be "".
+                    
+                    The image text may vary in format, but it will always contain these three pieces of information. Return the extracted information in this JSON format and only json object itself, nothing else:
 
                     {
                       "name":"extracted_name",
@@ -41,6 +43,7 @@ export async function POST(req: Request) {
                       "price": "extracted_price_value",
                       "location": "extracted_location_value"
                     }
+                      If sku is not found, return only {"error":"No Sku found"}
               `,
             },
             {
