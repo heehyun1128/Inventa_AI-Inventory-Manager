@@ -4,12 +4,11 @@ import axios from "axios";
 import Image from "next/image";
 import { addItem } from "@/lib/actions/item.actions";
 import { Button } from "@mui/material";
+import { useRouter } from "next/navigation";
 
-
-
-export const addToInventory = (picDescription:string,qty:string) => {
+export const addToInventory = (picDescription: string, qty: string) => {
   const res: any = picDescription;
-  console.log(picDescription)
+  console.log(picDescription);
 
   const cleanedRes = res?.object
     .replace(/```json/g, "")
@@ -22,13 +21,12 @@ export const addToInventory = (picDescription:string,qty:string) => {
   addItem(jsonObject);
 };
 
-
 export const ImageUploader: React.FC = () => {
   const [image, setImage] = useState<string | ArrayBuffer | null>(null);
   const [file, setFile] = useState<File | null>(null);
   const [picDescription, setPicDescription] = useState<string>("");
   const [qty, setQty] = useState<string>("");
-
+  const router = useRouter();
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     console.log(selectedFile);
@@ -63,8 +61,6 @@ export const ImageUploader: React.FC = () => {
       }
     }
   };
-
-   
 
   return (
     <div className="image-uploader-container text-focus-in ">
@@ -108,7 +104,7 @@ export const ImageUploader: React.FC = () => {
                 cursor: "pointer",
                 backgroundColor: "black",
                 padding: "12px",
-               
+
                 color: "white",
               }}
               onClick={handleSubmit}
@@ -121,25 +117,65 @@ export const ImageUploader: React.FC = () => {
       {picDescription !== "" ? (
         <div
           style={{
-            width: "30vw",
+            width: "100%",
             display: "flex",
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
           }}
         >
-          <div style={{ height: "20vh", padding: "20px" }}>
-            {JSON.stringify(picDescription, null, 2)}
+          <div
+            style={{
+              height: "fit-content",
+              padding: "20px",
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+            }}
+          >
+            <h2 style={{ marginBottom: "16px" }}>
+              Updating stock unit #
+              {
+                JSON.parse(
+                  (picDescription as any).object
+                    .replace(/```json/g, "")
+                    .replace(/```/g, "")
+                    .replace(/\n/g, "")
+                    .trim()
+                ).sku
+              }
+            </h2>
           </div>
-          <p>Quantity</p>
+          <h4 style={{ marginBottom: "16px" }}>Quantity</h4>
           <input
+            style={{
+              height: "40px",
+              borderRadius: "10px",
+              padding: "10px",
+              marginBottom: "16px",
+            }}
             type="text"
             placeholder="quantity"
             value={qty}
             onChange={(e) => setQty(e.target.value)}
           />
-          <p>Add Item to Inventory?</p>
-          <Button onClick={()=>addToInventory(picDescription,qty)}>Confirm</Button>
+          <p style={{ marginBottom: "16px" }}>Add Item to Inventory?</p>
+          <Button
+            style={{
+              cursor: "pointer",
+              backgroundColor: "black",
+              padding: "12px",
+              height: "30px",
+              color: "white",
+              marginBottom: "30px",
+            }}
+            onClick={() => {
+              addToInventory(picDescription, qty);
+              router.push("/inventory");
+            }}
+          >
+            Confirm
+          </Button>
         </div>
       ) : (
         <div
