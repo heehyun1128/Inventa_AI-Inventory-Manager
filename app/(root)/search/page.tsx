@@ -18,7 +18,9 @@ const Search: React.FC = () => {
       <p className="text-focus-in">
         Upload a Picture Below and Uppdate Your Inventory Instantly with Inventa
       </p>
+      <div style={{height:"fit-content", width:"70vw", border:"1px dotted gray", borderRadius:"20px",padding:"28px", marginTop:"20px"}}>
       <ImageUploader />
+      </div>
     </div>
   );
 };

@@ -43,7 +43,7 @@ export async function POST(req: Request) {
                       "price": "extracted_price_value",
                       "location": "extracted_location_value"
                     }
-                      If sku is not found, return only {"error":"No Sku found"}
+                      If sku is not found, return only {"error":"No Sku found. Please try again."}
               `,
             },
             {

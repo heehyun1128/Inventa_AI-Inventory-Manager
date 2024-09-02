@@ -9,6 +9,8 @@ import Image from "next/image";
 import axios from "axios";
 import Modal from "@/components/Modal";
 import { addToInventory } from "@/components/ImageUploader";
+import { CircularProgress } from "@mui/material";
+import "../../globals.css"
 
 const Wrapper = styled.div`
   position: fixed;
@@ -161,6 +163,7 @@ const Cam = () => {
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [picDescription, setPicDescription] = useState<string>("");
   const [qty, setQty] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const router = useRouter();
   useEffect(() => {
@@ -177,7 +180,7 @@ const Cam = () => {
   const handleSubmit = async () => {
     if (image) {
       const base64Image = (image as string).split(",")[1]; // Extract base64 data from data URL
-
+      setLoading(true);
       try {
         const response = await axios.post(
           "/api/image",
@@ -189,12 +192,34 @@ const Cam = () => {
           }
         );
         setPicDescription(response.data);
-        console.log(response.data)
+        console.log(response.data);
         console.log("Response from API:", response.data);
       } catch (error) {
         console.error("Error uploading image:", error);
+      } finally {
+        setLoading(false);
       }
     }
+  };
+
+  const parsePicDescription = (description: string) => {
+    try {
+      const jsonStr = (description as any).object
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .replace(/\n/g, "")
+        .trim();
+
+      return JSON.parse(jsonStr);
+    } catch (error) {
+      console.error("Error parsing JSON:", error);
+      return null;
+    }
+  };
+
+  const renderParsedDescription = (parsedDescription: any) => {
+    if (parsedDescription?.error) return parsedDescription.error;
+    return parsedDescription?.sku;
   };
 
   return (
@@ -247,13 +272,40 @@ const Cam = () => {
           >
             Adding Item to Inventory
           </h4>
-          <input
-            type="text"
-            value={qty}
-            onChange={(e) => setQty(e.target.value)}
-          />
-         
-          <Button onClick={()=>addToInventory(picDescription,qty)}>Confirm</Button>
+          {loading ? (
+            <CircularProgress style={{ marginTop: "20px" }} />
+          ) : (
+            <>
+              {renderParsedDescription(parsePicDescription(picDescription)) !==
+              "No Sku found. Please try again." ? (
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center", justifyContent:"center"}}>
+                  Adding item with sku number of <p style={{ color: "#4682A9" }}>
+                    {picDescription &&
+                      renderParsedDescription(
+                        parsePicDescription(picDescription)
+                      )}
+                  </p>
+                  <input
+                    type="text"
+                    value={qty}
+                    onChange={(e) => setQty(e.target.value)}
+                    style={{height:"40px",borderRadius:"6px", margin:"10px"}}
+                  />
+
+                  <button className="confirm-btn" onClick={() => addToInventory(picDescription, qty)}>
+                    Confirm
+                  </button>
+                </div>
+              ) : (
+                <p style={{ color: "#4682A9" }}>
+                  {picDescription &&
+                    renderParsedDescription(
+                      parsePicDescription(picDescription)
+                    )}
+                </p>
+              )}
+            </>
+          )}
         </div>
       </Modal>
 

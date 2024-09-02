@@ -20,6 +20,7 @@
     max-width: 500px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     position: relative;
+    height: 300px;
   }
   
   .modalHeader {
@@ -45,4 +46,5 @@
   .modalBody {
     padding: 10px 0;
   }
+  
   
