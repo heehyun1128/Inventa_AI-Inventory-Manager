@@ -2,9 +2,13 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import { useRouter } from "next/navigation";
 import { Camera, CameraType } from "../../../components/Camera";
 
 import Image from "next/image";
+import axios from "axios";
+import Modal from "@/components/Modal";
+import { addToInventory } from "@/components/ImageUploader";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -125,7 +129,7 @@ const ImagePreview = styled.div<{ image: string | null }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-
+  width: 100%;
   @media (max-width: 400px) {
     width: 50px;
     height: 120px;
@@ -154,7 +158,11 @@ const Cam = () => {
     undefined
   );
   const [torchToggled, setTorchToggled] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [picDescription, setPicDescription] = useState<string>("");
+  const [qty, setQty] = useState<string>("");
 
+  const router = useRouter();
   useEffect(() => {
     (async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -162,6 +170,32 @@ const Cam = () => {
       setDevices(videoDevices);
     })();
   });
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const handleSubmit = async () => {
+    if (image) {
+      const base64Image = (image as string).split(",")[1]; // Extract base64 data from data URL
+
+      try {
+        const response = await axios.post(
+          "/api/image",
+          { data: base64Image },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setPicDescription(response.data);
+        console.log(response.data)
+        console.log("Response from API:", response.data);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      }
+    }
+  };
 
   return (
     <Wrapper>
@@ -193,6 +227,36 @@ const Cam = () => {
           }}
         />
       )}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "14vh",
+          }}
+        >
+          <h4
+            style={{
+              textAlign: "center",
+              marginBottom: "12px",
+              fontSize: "22px",
+            }}
+          >
+            Adding Item to Inventory
+          </h4>
+          <input
+            type="text"
+            value={qty}
+            onChange={(e) => setQty(e.target.value)}
+          />
+         
+          <Button onClick={()=>addToInventory(picDescription,qty)}>Confirm</Button>
+        </div>
+      </Modal>
+
       <Control>
         <select
           onChange={(event) => {
@@ -205,7 +269,14 @@ const Cam = () => {
             </option>
           ))}
         </select>
-        <div style={{display:"flex",flexDirection:"column", alignContent:"center",justifyContent:"center"}}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
           <ImagePreview
             image={image}
             onClick={() => {
@@ -213,12 +284,38 @@ const Cam = () => {
             }}
           />
           {image && (
-            <button className="save-image-btn">
-
-            <a href={image} download="captured-image.jpg" style={{padding:"0",textDecoration:"none"}}>
-              Save Image
-            </a>
-            </button>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <button className="save-image-btn">
+                <a
+                  href={image}
+                  download="captured-image.jpg"
+                  style={{ padding: "0", textDecoration: "none" }}
+                >
+                  Save Image
+                </a>
+              </button>
+              <button
+                className="save-image-btn"
+                onClick={() => {
+                  handleSubmit();
+                  setIsModalOpen(true);
+                }}
+              >
+                <a
+                  href={image}
+                  style={{ padding: "0", textDecoration: "none" }}
+                >
+                  Add Item To Inventory
+                </a>
+              </button>
+            </div>
           )}
         </div>
         <TakePhotoButton
@@ -227,8 +324,6 @@ const Cam = () => {
               const photo = camera.current.takePhoto();
               console.log(photo);
               setImage(photo as string);
-
-           
             }
           }}
         />
