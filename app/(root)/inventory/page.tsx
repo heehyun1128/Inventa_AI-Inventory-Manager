@@ -31,13 +31,23 @@ const Inventory: React.FC = () => {
       }}
     >
       {items.length > 0 ? (
-        <>
+        <div>
           <InventoryTable items={items} setItems={setItems} />
-          <h2>Inventory Matrix</h2>
-          <InventoryPieChart items={items} />
-        </>
+          <div style={{ backgroundColor: "#F6F4EB", padding: "20px" }}>
+            <h2>Inventory Matrix</h2>
+            <InventoryPieChart items={items} />
+          </div>
+        </div>
       ) : (
-        <div style={{height:"80vh", display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center"}}>
+        <div
+          style={{
+            height: "80vh",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
           <div>Loading</div>
           <CircularProgress style={{ marginTop: "20px" }} />
         </div>

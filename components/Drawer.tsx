@@ -114,14 +114,14 @@ export default function MiniDrawer() {
   };
 
   return (
-    <Box style={{ width: "90vw", marginLeft: "30px" }}>
+    <Box style={{ width: "90vw", marginLeft: "30px"}}>
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar
           style={{
             display: "flex",
             justifyContent: "space-between",
-            backgroundColor: "white",
+            backgroundColor: "#F6F4EB",
           }}
         >
           <IconButton
@@ -141,7 +141,7 @@ export default function MiniDrawer() {
               href="/"
               style={{
                 textDecoration: "none",
-                color: "#2B2B28",
+                color: "#536493",
                 fontWeight: "bold",
                 fontSize:"30px"
               }}

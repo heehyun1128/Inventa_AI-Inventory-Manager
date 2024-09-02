@@ -284,8 +284,8 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         </Typography>
       ) : (
         <Typography
-          sx={{ flex: "1 1 100%" }}
-          variant="h6"
+          sx={{ flex: "1 1 100%",fontWeight:"bold",color:"#536493" }}
+          variant="h5"
           id="tableTitle"
           component="div"
         >

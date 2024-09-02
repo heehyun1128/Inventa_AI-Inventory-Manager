@@ -279,7 +279,7 @@ const Cam = () => {
               {renderParsedDescription(parsePicDescription(picDescription)) !==
               "No Sku found. Please try again." ? (
                 <div style={{display:"flex",flexDirection:"column",alignItems:"center", justifyContent:"center"}}>
-                  Adding item with sku number of <p style={{ color: "#4682A9" }}>
+                  Adding item with sku number of <p style={{ color: "#536493" }}>
                     {picDescription &&
                       renderParsedDescription(
                         parsePicDescription(picDescription)
@@ -297,7 +297,7 @@ const Cam = () => {
                   </button>
                 </div>
               ) : (
-                <p style={{ color: "#4682A9" }}>
+                <p style={{ color: "#536493" }}>
                   {picDescription &&
                     renderParsedDescription(
                       parsePicDescription(picDescription)
