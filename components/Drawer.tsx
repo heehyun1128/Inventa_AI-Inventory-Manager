@@ -145,7 +145,7 @@ export default function MiniDrawer() {
                 fontSize:"30px"
               }}
             >
-              INVENTA
+              iNVENTa
             </Link>
           </Typography>
           <Typography variant="h6" noWrap component="div"></Typography>

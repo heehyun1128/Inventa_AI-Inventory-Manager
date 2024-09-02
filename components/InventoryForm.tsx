@@ -81,7 +81,7 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
           This is a filled error Alert.
         </Alert>
       )}
-      <div style={{ display: "flex", justifyContent: "space-between" }}>
+      <div style={{ display: "flex", justifyContent: "space-between",alignItems:"center" }}>
         <div>
           <TextField
             label="Item Name"
@@ -129,7 +129,7 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
             style={{ width: "14vw" }}
           />
         </div>
-        <Button variant="contained" color="primary" type="submit">
+        <Button variant="contained" color="primary" type="submit" style={{backgroundColor:"black",height:"40px", marginRight:"20px"}}>
           Submit
         </Button>
       </div>

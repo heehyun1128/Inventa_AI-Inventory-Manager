@@ -70,32 +70,6 @@ function createData(
   };
 }
 
-// const rows = [
-//   createData("1", "Cupcake", "305", "3.7", "67", ""),
-//   // createData(2, 'Donut', 452, 25.0, 51, 4.9),
-//   // createData(3, 'Eclair', 262, 16.0, 24, 6.0),
-//   // createData(4, 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-//   // createData(5, 'Gingerbread', 356, 16.0, 49, 3.9),
-//   // createData(6, 'Honeycomb', 408, 3.2, 87, 6.5),
-//   // createData(7, 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-//   // createData(8, 'Jelly Bean', 375, 0.0, 94, 0.0),
-//   // createData(9, 'KitKat', 518, 26.0, 65, 7.0),
-//   // createData(10, 'Lollipop', 392, 0.2, 98, 0.0),
-//   // createData(11, 'Marshmallow', 318, 0, 81, 2.0),
-//   // createData(12, 'Nougat', 360, 19.0, 9, 37.0),
-//   // createData(13, 'Oreo', 437, 18.0, 63, 4.0),
-// ];
-
-// const rowItems=items.forEach(item=>createData(`
-//   ${item.id}`,
-//   `${item.name}`,
-//   `${item.sku}`,
-//   `${item.price}`,
-//   `${item.quantity}`,
-//   `${item.location}`,
-
-// ))
-
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
   if (b[orderBy] < a[orderBy]) {
     return -1;
@@ -226,7 +200,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
         </TableCell>
         {headCells.map((headCell) => (
           <TableCell
-          style={{textAlign:"center",fontWeight:700}}
+            style={{ textAlign: "center", fontWeight: 700 }}
             key={headCell.id}
             align={headCell.numeric ? "right" : "left"}
             padding={headCell.disablePadding ? "none" : "normal"}
@@ -265,10 +239,9 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
   const delItem = async (id: string) => {
     try {
       const querySnapshot = await getDocs(collection(db, "items"));
-    
-      for (const docu of querySnapshot.docs) {
-        for(const sel of selected){
 
+      for (const docu of querySnapshot.docs) {
+        for (const sel of selected) {
           if (docu.data().id === sel) {
             const docRef = doc(db, "items", docu.id);
             await deleteDoc(docRef);
@@ -283,7 +256,7 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
         throw new Error(`${JSON.stringify(err)}`);
       }
     } finally {
-      window.location.reload()
+      window.location.reload();
     }
   };
   return (
@@ -336,7 +309,6 @@ function EnhancedTableToolbar(props: EnhancedTableToolbarProps) {
               <DeleteIcon />
             </IconButton>
           </Tooltip>
-        
         </>
       ) : (
         <></>
@@ -428,7 +400,7 @@ export default function InventoryTable({
             item.location
           )
         );
-        console.log(formattedRows);
+
         setRows(formattedRows);
       } catch (error) {
         console.error("Error updating document:", error);
@@ -541,7 +513,7 @@ export default function InventoryTable({
         />
         <Button
           variant="contained"
-          sx={{backgroundColor:"black"}}
+          sx={{ backgroundColor: "black", marginLeft: "10px" }}
           onClick={() => {
             setIsAddItem(!isAddItem);
           }}
@@ -596,7 +568,7 @@ export default function InventoryTable({
                     {["id", "name", "sku", "price", "quantity", "location"].map(
                       (field) => (
                         <TableCell
-                        style={{textAlign:"center"}}
+                          style={{ textAlign: "center" }}
                           key={field}
                           component="th"
                           id={labelId}
