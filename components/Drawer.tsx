@@ -27,6 +27,7 @@ import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CameraIcon from "@mui/icons-material/Camera";
 import PageviewIcon from "@mui/icons-material/Pageview";
+import { Tooltip } from "@mui/material";
 
 const drawerWidth = 240;
 
@@ -164,7 +165,8 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           {["Dashboard", "Inventory", "Cam", "Search"].map((text, index) => (
-            <ListItem
+            <Tooltip title={text==="Cam"?"Camera":text==="Search"?"AI Inventory Management":`${text}`} placement="right">
+              <ListItem
               key={text}
               disablePadding
               sx={{ display: "block" }}
@@ -199,6 +201,7 @@ export default function MiniDrawer() {
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            </Tooltip>
           ))}
         </List>
         <Divider />

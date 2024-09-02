@@ -29,8 +29,8 @@ const Dashboard = () => {
     },
     {
       title: "AI Inventory Management",
-      subtitle: "Inventory management is a hastle?",
-      description: "Upload A Label and Our AI Search Engine Will Assist You",
+      subtitle: "Inventory Management Is A Hastle?",
+      description: "Upload A Label and Our AI Search Engine Will Assist You.",
       icon: <SearchIcon className="dash-icon"  />,
       onClick: () => router.push("/search"),
       animationClass: "tracking-in-expand3",
