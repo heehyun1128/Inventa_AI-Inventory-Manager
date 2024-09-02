@@ -177,7 +177,7 @@ export const Camera = React.forwardRef<unknown, CameraProps>(
     }, [stream]);
 
     return (
-      <Container ref={container} aspectRatio={aspectRatio}>
+      <Container ref={container} aspectRatio={aspectRatio} >
         <Wrapper>
           {notSupported ? <ErrorMsg>{errorMessages.noCameraAccessible}</ErrorMsg> : null}
           {permissionDenied ? <ErrorMsg>{errorMessages.permissionDenied}</ErrorMsg> : null}

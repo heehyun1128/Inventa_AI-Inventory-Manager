@@ -20,7 +20,7 @@ const Dashboard = () => {
         </Tooltip>
       ),
       onClick: () => router.push("/inventory"),
-      animationClass: "tracking-in-expand",
+      
     },
     {
       title: "Capture",
@@ -32,7 +32,7 @@ const Dashboard = () => {
         </Tooltip>
       ),
       onClick: () => router.push("/cam"),
-      animationClass: "tracking-in-expand2",
+      
     },
     {
       title: "AI Inventory Management",
@@ -44,7 +44,7 @@ const Dashboard = () => {
         </Tooltip>
       ),
       onClick: () => router.push("/search"),
-      animationClass: "tracking-in-expand3",
+ 
     },
   ];
   return (
@@ -56,8 +56,8 @@ const Dashboard = () => {
       >
         <div className="dashboard-card-container ">
           {dashboardCards.map((card, index) => (
-            <div key={index} className={`dashboard-cards card${index + 1}`}>
-              <h1 className={`dashboard-title ${card.animationClass}`}>
+            <div key={index} className={`dashboard-cards card${index + 1} text-focus-in`}>
+              <h1 className={`dashboard-title text-focus-in`}>
                 {card.title}
               </h1>
 

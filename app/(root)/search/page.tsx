@@ -4,7 +4,7 @@ import React from "react";
 const Search: React.FC = () => {
   return (
     <div
-      className="search-container"
+      className="search-container text-focus-in"
       style={{
         display: "flex",
         flexDirection: "column",
