@@ -165,7 +165,7 @@ export default function MiniDrawer() {
         <Divider />
         <List>
           {["Dashboard", "Inventory", "Cam", "Search"].map((text, index) => (
-            <Tooltip title={text==="Cam"?"Camera":text==="Search"?"AI Inventory Management":`${text}`} placement="right">
+            <Tooltip key={index} title={text==="Cam"?"Camera":text==="Search"?"AI Inventory Management":`${text}`} placement="right">
               <ListItem
               key={text}
               disablePadding
