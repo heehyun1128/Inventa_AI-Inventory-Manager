@@ -32,6 +32,8 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
       [name]: value,
     });
   };
+
+  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -43,6 +45,7 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
     return () => unsubscribe();
   }, []);
 
+  // function to submit item to database
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     if (!formData.sku) {
       e.preventDefault();
@@ -76,6 +79,7 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
       autoComplete="off"
       onSubmit={handleSubmit}
     >
+      {/* if no sku, alert the user */}
       {isNoSKU && (
         <Alert variant="filled" severity="error">
           This is a filled error Alert.

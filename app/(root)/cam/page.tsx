@@ -9,9 +9,10 @@ import Image from "next/image";
 import axios from "axios";
 import Modal from "@/components/Modal";
 import { addToInventory } from "@/components/ImageUploader";
-import { CircularProgress } from "@mui/material";
-import "../../globals.css"
+import { Alert, CircularProgress } from "@mui/material";
+import "../../globals.css";
 import { parsePicDescription, renderParsedDescription } from "@/lib/helper";
+import CheckIcon from "@mui/icons-material/Check";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -151,9 +152,6 @@ const FullScreenImagePreview = styled.div<{ image: string | null }>`
   background-position: center;
 `;
 
-
-
-
 const Cam = () => {
   const [numberOfCameras, setNumberOfCameras] = useState(0);
   const [image, setImage] = useState<string | null>(null);
@@ -168,8 +166,10 @@ const Cam = () => {
   const [picDescription, setPicDescription] = useState<string>("");
   const [qty, setQty] = useState<string>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [successAlert, setSuccessAlert] = useState<boolean>(false);
 
   const router = useRouter();
+
   useEffect(() => {
     (async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -181,6 +181,7 @@ const Cam = () => {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
+  // function for object recognition
   const handleSubmit = async () => {
     if (image) {
       const base64Image = (image as string).split(",")[1]; // Extract base64 data from data URL
@@ -206,9 +207,8 @@ const Cam = () => {
     }
   };
 
-  
-
   return (
+    // camera to capture object
     <Wrapper>
       {showImage ? (
         <FullScreenImagePreview
@@ -238,7 +238,17 @@ const Cam = () => {
           }}
         />
       )}
-      <Modal isOpen={isModalOpen} onClose={closeModal}>
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setSuccessAlert(false);
+          setPicDescription("");
+          setQty("");
+          setImage("");
+
+          closeModal();
+        }}
+      >
         <div
           style={{
             display: "flex",
@@ -249,46 +259,77 @@ const Cam = () => {
             height: "14vh",
           }}
         >
-          <h4
-            style={{
-              textAlign: "center",
-              marginBottom: "12px",
-              fontSize: "22px",
-            }}
-          >
-            Adding Item to Inventory
-          </h4>
-          {loading ? (
-            <CircularProgress style={{ marginTop: "20px" }} />
-          ) : (
+          {successAlert && (
+            <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
+              Successfully updated inventory!
+            </Alert>
+          )}
+          {!successAlert && (
             <>
-              {renderParsedDescription(parsePicDescription(picDescription)) !==
-              "No Sku found. Please try again." ? (
-                <div style={{display:"flex",flexDirection:"column",alignItems:"center", justifyContent:"center"}}>
-                  Adding item with sku number of <p style={{ color: "#536493" }}>
-                    {picDescription &&
-                      renderParsedDescription(
-                        parsePicDescription(picDescription)
-                      )}
-                  </p>
-                  <input
-                    type="text"
-                    value={qty}
-                    onChange={(e) => setQty(e.target.value)}
-                    style={{height:"40px",borderRadius:"6px", margin:"10px"}}
-                  />
-
-                  <button className="confirm-btn" onClick={() => addToInventory(picDescription, qty)}>
-                    Confirm
-                  </button>
-                </div>
+              <h4
+                style={{
+                  textAlign: "center",
+                  marginBottom: "12px",
+                  fontSize: "22px",
+                }}
+              >
+                Adding Item to Inventory
+              </h4>
+              {/* if the image is not done uploading, render loader */}
+              {loading ? (
+                <CircularProgress style={{ marginTop: "20px" }} />
               ) : (
-                <p style={{ color: "#536493" }}>
-                  {picDescription &&
-                    renderParsedDescription(
-                      parsePicDescription(picDescription)
-                    )}
-                </p>
+                <>
+                {/* if sku is found, AI will read the image and render inventory update form */}
+                  {renderParsedDescription(
+                    parsePicDescription(picDescription)
+                  ) !== "No Sku found. Please try again." ? (
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                      }}
+                    >
+                      Adding item with sku number of{" "}
+                      <p style={{ color: "#536493" }}>
+                        {picDescription &&
+                          renderParsedDescription(
+                            parsePicDescription(picDescription)
+                          )}
+                      </p>
+                      <input
+                        type="text"
+                        value={qty}
+                        onChange={(e) => setQty(e.target.value)}
+                        style={{
+                          height: "40px",
+                          borderRadius: "6px",
+                          margin: "10px",
+                        }}
+                      />
+                      <button
+                        className="confirm-btn"
+                        onClick={() => {
+                          addToInventory(picDescription, qty);
+                          // router.push("/inventory");
+                          setSuccessAlert(true);
+                        }}
+                      >
+                        Confirm
+                      </button>
+                    </div>
+                  ) : (
+                    // no sku found, render error message
+                    <p style={{ color: "#536493" }}>
+                      {picDescription &&
+                        renderParsedDescription(
+                          parsePicDescription(picDescription)
+                        )}
+                    </p>
+                  )}
+                </>
               )}
             </>
           )}
