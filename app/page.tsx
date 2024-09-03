@@ -16,27 +16,29 @@ export default function Home() {
       <div style={{display:"flex"}}>
       <SignedOut>
         <Link href="/sign-in">
-          <Button className="signin-btn slide-in-bottom">Login</Button>
+          <button className="signin-btn slide-in-bottom">Login</button>
         </Link>
         <Link href="/sign-up">
-          <Button className="register-btn slide-in-bottom">Register</Button>
+          <button className="register-btn slide-in-bottom">Register</button>
         </Link>
       </SignedOut>
       </div>
      
-        <Button
-          sx={{
+        <button
+          style={{
             padding: "15px 40px",
             borderRadius: "1rem",
+            color:"white",
+            cursor:"pointer"
           }}
           className="home-btn slide-in-bottom"
-          variant="contained"
+          
           onClick={() => {
             router.push("/dashboard");
           }}
         >
           Try As a Demo User
-        </Button>
+        </button>
      
     </div>
   );

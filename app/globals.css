@@ -15,6 +15,7 @@ body {
   border:none;
   width: 100px;
   height: 40px;
+  cursor: pointer;
 }
 
 .home-background {
@@ -83,6 +84,15 @@ body {
 .dashboard-description {
   margin-top: 10px;
   color: rgb(49, 49, 49);
+}
+
+.dashboard-subtitle{
+  font-size: 20px;
+}
+
+.dashboard-description {
+  font-size: 14px;
+  margin-top: 20px;
 }
 
 .save-image-btn {
@@ -196,6 +206,7 @@ body {
 }
 .home-btn:hover,.signin-btn:hover, .register-btn:hover {
   background-color:rgb(110, 133, 183);
+  cursor: pointer;
   
 }
 .signin-btn, .register-btn {

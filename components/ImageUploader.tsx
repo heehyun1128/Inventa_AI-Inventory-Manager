@@ -73,6 +73,7 @@ export const ImageUploader: React.FC = () => {
 
   return (
     <>
+    {/* inventory successfully updated - render success alert */}
       {successAlert && (
         <div
           style={{
@@ -86,6 +87,7 @@ export const ImageUploader: React.FC = () => {
           <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
             Successfully updated inventory!
           </Alert>
+          
           <Button
             style={{
               cursor: "pointer",
@@ -107,6 +109,8 @@ export const ImageUploader: React.FC = () => {
           </Button>
         </div>
       )}
+
+      {/* upload image */}
       {!successAlert && (
         <div
           className="image-uploader-container text-focus-in "
@@ -140,6 +144,7 @@ export const ImageUploader: React.FC = () => {
               onChange={handleFileChange}
               id="customFileInput"
             />
+            {/* customized image upload button  */}
             <button
               onClick={() => {
                 setPicDescription("");
@@ -160,6 +165,7 @@ export const ImageUploader: React.FC = () => {
             <span id="fileName" style={{ marginTop: "10px" }}>
               No file chosen
             </span>
+            {/* if image is uploaded - render image */}
             {image && (
               <div
                 style={{
@@ -182,9 +188,11 @@ export const ImageUploader: React.FC = () => {
                   }}
                   layout="responsive"
                 />
+
                 {loading ? (
                   <CircularProgress style={{ marginTop: "20px" }} />
                 ) : (
+                  // image done uploading, submit image for AI object recognition
                   <Button
                     variant="contained"
                     className="submit-img-btn"
@@ -217,6 +225,7 @@ export const ImageUploader: React.FC = () => {
                 {renderParsedDescription(
                   parsePicDescription(picDescription)
                 ) !== "No Sku found. Please try again." ? (
+                  // sku is found in image - update inventory with quantity input
                   <div
                     style={{
                       height: "fit-content",
@@ -257,6 +266,7 @@ export const ImageUploader: React.FC = () => {
                     <p style={{ marginBottom: "16px" }}>
                       Add Item to Inventory?
                     </p>
+                    {/* button to confirm adding item to inventory */}
                     <Button
                       style={{
                         cursor: "pointer",
