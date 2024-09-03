@@ -26,7 +26,9 @@ import logo from "../public/images/s-logo.png";
 import DashboardIcon from "@mui/icons-material/Dashboard";
 import InventoryIcon from "@mui/icons-material/Inventory";
 import CameraIcon from "@mui/icons-material/Camera";
-import PageviewIcon from '@mui/icons-material/Pageview';
+import PageviewIcon from "@mui/icons-material/Pageview";
+import { Tooltip } from "@mui/material";
+import { Nerko_One } from "next/font/google"; 
 
 const drawerWidth = 240;
 
@@ -113,18 +115,16 @@ export default function MiniDrawer() {
   };
 
   return (
-    <Box style={{ width: "90vw", marginLeft: "30px" }}>
+    <Box style={{ width: "90vw", marginLeft: "30px"}}>
       <CssBaseline />
-      <AppBar
-        position="fixed"
-        open={open}
-        
-      >
-        <Toolbar style={{
-          display: "flex",
-          justifyContent: "space-between",
-          backgroundColor: "rgb(43, 43, 43)",
-        }}>
+      <AppBar position="fixed" open={open}>
+        <Toolbar
+          style={{
+            display: "flex",
+            justifyContent: "space-between",
+            backgroundColor: "#30302f",
+          }}
+        >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -137,12 +137,21 @@ export default function MiniDrawer() {
           >
             <MenuIcon />
           </IconButton>
-        <Typography variant="h6" noWrap component="div">
-          <Link href="/" style={{ textDecoration: "none", color: "white" }}>
-            INVENTA
-          </Link>
-        </Typography>
-        <Typography variant="h6" noWrap component="div"></Typography>
+          <Typography variant="h6" noWrap component="div">
+            <Link
+              href="/"
+              style={{
+                textDecoration: "none",
+                color: "white",
+                fontWeight: "bold",
+                fontSize:"30px",
+                fontFamily:"Nerko_One"
+              }}
+            >
+              iNVENTa
+            </Link>
+          </Typography>
+          <Typography variant="h6" noWrap component="div"></Typography>
         </Toolbar>
       </AppBar>
       <Drawer variant="permanent" open={open}>
@@ -157,8 +166,9 @@ export default function MiniDrawer() {
         </DrawerHeader>
         <Divider />
         <List>
-          {["Dashboard", "Inventory", "Cam","Search"].map((text, index) => (
-            <ListItem
+          {["Dashboard", "Inventory", "Cam", "Search"].map((text, index) => (
+            <Tooltip key={index} title={text==="Cam"?"Camera":text==="Search"?"AI Inventory Management":`${text}`} placement="right">
+              <ListItem
               key={text}
               disablePadding
               sx={{ display: "block" }}
@@ -184,13 +194,16 @@ export default function MiniDrawer() {
                     <DashboardIcon />
                   ) : text === "Inventory" ? (
                     <InventoryIcon />
+                  ) : text === "Cam" ? (
+                    <CameraIcon />
                   ) : (
-                    text === "Cam" ? <CameraIcon />:<PageviewIcon/>
+                    <PageviewIcon />
                   )}
                 </ListItemIcon>
                 <ListItemText primary={text} sx={{ opacity: open ? 1 : 0 }} />
               </ListItemButton>
             </ListItem>
+            </Tooltip>
           ))}
         </List>
         <Divider />

@@ -2,9 +2,16 @@
 import React, { useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 
+import { useRouter } from "next/navigation";
 import { Camera, CameraType } from "../../../components/Camera";
 
 import Image from "next/image";
+import axios from "axios";
+import Modal from "@/components/Modal";
+import { addToInventory } from "@/components/ImageUploader";
+import { CircularProgress } from "@mui/material";
+import "../../globals.css"
+import { parsePicDescription, renderParsedDescription } from "@/lib/helper";
 
 const Wrapper = styled.div`
   position: fixed;
@@ -125,7 +132,7 @@ const ImagePreview = styled.div<{ image: string | null }>`
   background-size: contain;
   background-repeat: no-repeat;
   background-position: center;
-
+  width: 100%;
   @media (max-width: 400px) {
     width: 50px;
     height: 120px;
@@ -144,6 +151,9 @@ const FullScreenImagePreview = styled.div<{ image: string | null }>`
   background-position: center;
 `;
 
+
+
+
 const Cam = () => {
   const [numberOfCameras, setNumberOfCameras] = useState(0);
   const [image, setImage] = useState<string | null>(null);
@@ -154,7 +164,12 @@ const Cam = () => {
     undefined
   );
   const [torchToggled, setTorchToggled] = useState<boolean>(false);
+  const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
+  const [picDescription, setPicDescription] = useState<string>("");
+  const [qty, setQty] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
+  const router = useRouter();
   useEffect(() => {
     (async () => {
       const devices = await navigator.mediaDevices.enumerateDevices();
@@ -162,6 +177,36 @@ const Cam = () => {
       setDevices(videoDevices);
     })();
   });
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => setIsModalOpen(false);
+
+  const handleSubmit = async () => {
+    if (image) {
+      const base64Image = (image as string).split(",")[1]; // Extract base64 data from data URL
+      setLoading(true);
+      try {
+        const response = await axios.post(
+          "/api/image",
+          { data: base64Image },
+          {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+        setPicDescription(response.data);
+        console.log(response.data);
+        console.log("Response from API:", response.data);
+      } catch (error) {
+        console.error("Error uploading image:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+  };
+
+  
 
   return (
     <Wrapper>
@@ -193,6 +238,63 @@ const Cam = () => {
           }}
         />
       )}
+      <Modal isOpen={isModalOpen} onClose={closeModal}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "space-between",
+            width: "100%",
+            height: "14vh",
+          }}
+        >
+          <h4
+            style={{
+              textAlign: "center",
+              marginBottom: "12px",
+              fontSize: "22px",
+            }}
+          >
+            Adding Item to Inventory
+          </h4>
+          {loading ? (
+            <CircularProgress style={{ marginTop: "20px" }} />
+          ) : (
+            <>
+              {renderParsedDescription(parsePicDescription(picDescription)) !==
+              "No Sku found. Please try again." ? (
+                <div style={{display:"flex",flexDirection:"column",alignItems:"center", justifyContent:"center"}}>
+                  Adding item with sku number of <p style={{ color: "#536493" }}>
+                    {picDescription &&
+                      renderParsedDescription(
+                        parsePicDescription(picDescription)
+                      )}
+                  </p>
+                  <input
+                    type="text"
+                    value={qty}
+                    onChange={(e) => setQty(e.target.value)}
+                    style={{height:"40px",borderRadius:"6px", margin:"10px"}}
+                  />
+
+                  <button className="confirm-btn" onClick={() => addToInventory(picDescription, qty)}>
+                    Confirm
+                  </button>
+                </div>
+              ) : (
+                <p style={{ color: "#536493" }}>
+                  {picDescription &&
+                    renderParsedDescription(
+                      parsePicDescription(picDescription)
+                    )}
+                </p>
+              )}
+            </>
+          )}
+        </div>
+      </Modal>
+
       <Control>
         <select
           onChange={(event) => {
@@ -205,7 +307,14 @@ const Cam = () => {
             </option>
           ))}
         </select>
-        <div style={{display:"flex",flexDirection:"column", alignContent:"center",justifyContent:"center"}}>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            alignContent: "center",
+            justifyContent: "center",
+          }}
+        >
           <ImagePreview
             image={image}
             onClick={() => {
@@ -213,12 +322,38 @@ const Cam = () => {
             }}
           />
           {image && (
-            <button className="save-image-btn">
-
-            <a href={image} download="captured-image.jpg" style={{padding:"0",textDecoration:"none"}}>
-              Save Image
-            </a>
-            </button>
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <button className="save-image-btn">
+                <a
+                  href={image}
+                  download="captured-image.jpg"
+                  style={{ padding: "0", textDecoration: "none" }}
+                >
+                  Save Image
+                </a>
+              </button>
+              <button
+                className="save-image-btn"
+                onClick={() => {
+                  handleSubmit();
+                  setIsModalOpen(true);
+                }}
+              >
+                <a
+                  href={image}
+                  style={{ padding: "0", textDecoration: "none" }}
+                >
+                  Add Item To Inventory
+                </a>
+              </button>
+            </div>
           )}
         </div>
         <TakePhotoButton
@@ -227,8 +362,6 @@ const Cam = () => {
               const photo = camera.current.takePhoto();
               console.log(photo);
               setImage(photo as string);
-
-           
             }
           }}
         />

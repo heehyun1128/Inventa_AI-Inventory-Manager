@@ -1,6 +1,20 @@
 * {
   padding: 0;
   margin: 0;
+  
+}
+
+body {
+  color: #2b2b28;
+}
+
+.confirm-btn{
+  background-color: #536493;
+  color:white;
+  border-radius: 6px;
+  border:none;
+  width: 100px;
+  height: 40px;
 }
 
 .home-background {
@@ -27,8 +41,9 @@
   width: 100vw;
 } */
 .dashboard-background {
-  background: url("../public/images/dashboard-bgi.jpg") no-repeat center center;
+  /* background: url("../public/images/dashboard-bgi.jpg") no-repeat center center; */
   background-size: cover;
+  background-color: white;
   color: white;
   text-align: center;
 
@@ -47,10 +62,10 @@
   display: flex;
 }
 .dashboard-cards {
-  padding: 10px;
-  background-color: rgb(255, 255, 255, 0.8);
-  width: 18vw;
-  height: 50vh;
+  padding: 20px;
+  background-color: #f6f4eb;
+  width: 22vw;
+  height: 55vh;
   border-radius: 2rem;
   margin: 0 20px 20px;
   position: relative;
@@ -71,7 +86,13 @@
 }
 
 .save-image-btn {
-  height: 20px;
+  height: 40px;
+  border-radius: 6px;
+  background-color: #fff;
+  padding: 8px;
+}
+.save-image-btn a {
+  color: #2b2b28;
 }
 
 .image-uploader-container {
@@ -170,12 +191,22 @@
 }
 
 .home-btn {
-  background-color: rgba(0, 0, 0, 0.6);
-  margin-top: 20vh;
+  background-color:  rgba(0, 0, 0, 0.8);
+  margin-top: 10vh;
 }
-.home-btn:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+.home-btn:hover,.signin-btn:hover, .register-btn:hover {
+  background-color:rgb(110, 133, 183);
+  
 }
+.signin-btn, .register-btn {
+  background-color:  rgba(0, 0, 0, 0.8);
+  color: white;
+  margin-right: 10px;
+  margin-top: 60px;
+ padding: 10px 20px;
+ border-radius: 1rem;
+}
+
 
 .slide-in-bottom {
   -webkit-animation: slide-in-bottom 1.5s cubic-bezier(0.25, 0.46, 0.45, 0.94)
@@ -328,11 +359,11 @@
   }
 }
 .dash-icon {
-  font-size: 100px;
-  color: rgb(89, 89, 89);
+  font-size: 60px;
+  color: #2b2b28;
 }
 .dash-icon:hover {
-  font-size: 105px;
+  transform: scale(1.1);
   color: rgb(189, 164, 130);
   cursor: pointer;
 }
@@ -442,6 +473,7 @@
 
   .search-container {
     position: absolute;
+   
     left: 60px;
     top: 100px;
   }
@@ -470,7 +502,7 @@
   .sc-gsFSXq {
     flex-direction: column !important;
   }
-  button.sc-kAyceB{
+  button.sc-kAyceB {
     width: 60px !important;
     height: 60px !important;
     position: fixed !important;
@@ -487,8 +519,6 @@
     border-radius: 5px;
     color: black;
   }
-
-  
 
   div.sc-kpDqfm {
     height: 200px;
@@ -510,4 +540,8 @@
   .image-uploader-container {
     flex-direction: column;
   }
+}
+
+.dashboard-btn:hover {
+  color: orange;
 }
