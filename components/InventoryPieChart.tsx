@@ -15,7 +15,7 @@ export default function InventoryPieChart({ items }: { items: ItemInterface[] })
   }));
 
   return (
-    <ResponsiveContainer width="100%" height={400}>
+    <ResponsiveContainer width="100%" height={450}>
       <PieChart>
         <Pie
           dataKey="value"

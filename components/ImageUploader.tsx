@@ -5,12 +5,10 @@ import Image from "next/image";
 import { addItem } from "@/lib/actions/item.actions";
 import { Button, CircularProgress } from "@mui/material";
 import { useRouter } from "next/navigation";
-import {
-  parsePicDescription,
-  renderParsedDescription,
-} from "@/app/(root)/cam/page";
+
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
+import { parsePicDescription, renderParsedDescription } from "@/lib/helper";
 
 export const addToInventory = (picDescription: string, qty: string) => {
   const res: any = picDescription;
@@ -248,8 +246,10 @@ export const ImageUploader: React.FC = () => {
                         borderRadius: "10px",
                         padding: "10px",
                         marginBottom: "16px",
+                        
                       }}
                       type="text"
+                    
                       placeholder="quantity"
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}
