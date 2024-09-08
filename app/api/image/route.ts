@@ -19,6 +19,16 @@ export async function POST(req: Request) {
       });
     }
 
+    const promptText = process.env.NEXT_PUBLIC_OPENAI_PROMPT;
+
+    if (!promptText) {
+      console.error("OpenAI prompt is missing");
+      return NextResponse.json({
+        error: "OpenAI prompt is missing",
+        success: false,
+      });
+    }
+
     // Call OpenAI API
     const response = await openai.chat.completions.create({
       model: "gpt-4o-mini",
@@ -28,23 +38,8 @@ export async function POST(req: Request) {
           content: [
             {
               type: "text",
-              text: `Analyze the text in the provided image and extract the following information as a JSON object:
-                    SKU: The SKU number, which follows the text 'sku number:', 'sku:', or is the first alphanumeric code in the text.
-                    Name: The Name of the item, typically is something in the inventory, like device,tool, accessaries
-                    Price: The price, which is in the format of a dollar sign followed by a numeric value, such as '$99.99'.
-                    Location: The location, which is typically a word like 'Aisle' followed by a number.
-                    if any of name, price, location is not found, their value will be "".
-                    
-                    The image text may vary in format, but it will always contain these three pieces of information. Return the extracted information in this JSON format and only json object itself, nothing else:
-
-                    {
-                      "name":"extracted_name",
-                      "sku": "extracted_sku_value",
-                      "price": "extracted_price_value",
-                      "location": "extracted_location_value"
-                    }
-                      If sku is not found, return only {"error":"No Sku found. Please try again."}
-              `,
+              text: promptText
+              ,
             },
             {
               type: "image_url",
