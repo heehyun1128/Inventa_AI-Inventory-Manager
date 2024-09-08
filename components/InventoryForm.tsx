@@ -33,7 +33,6 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
     });
   };
 
-  
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -55,7 +54,6 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
     }
 
     try {
-     
       await addItem(formData);
       setFormData({
         name: "",
@@ -85,8 +83,24 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
           This is a filled error Alert.
         </Alert>
       )}
-      <div style={{ display: "flex", justifyContent: "space-between",alignItems:"center" }}>
-        <div>
+      <Box
+        sx={{
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          flexDirection: { xs: "column", sm: "row" },
+        }}
+      >
+        <Box
+          sx={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            flexDirection: { xs: "column", sm: "row" },
+            gap: { xs: 2, sm: 1 },
+            width: "100%",
+          }}
+        >
           <TextField
             label="Item Name"
             variant="outlined"
@@ -94,7 +108,11 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
             value={formData.name}
             onChange={handleChange}
             // required
-            style={{ width: "14vw" }}
+            sx={{
+            
+              width: { xs: "90vw", sm: "14vw" },
+              mb: { xs: 2, sm: 0 },
+            }}
           />
           <TextField
             label="SKU"
@@ -103,7 +121,10 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
             value={formData.sku}
             onChange={handleChange}
             required
-            style={{ width: "14vw" }}
+            sx={{
+              width: { xs: "90vw", sm: "14vw" },
+              mb: { xs: 2, sm: 0 },
+            }}
           />
           <TextField
             label="Price"
@@ -112,7 +133,10 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
             value={formData.price}
             onChange={handleChange}
             // required
-            style={{ width: "14vw" }}
+            sx={{
+              width: { xs: "90vw", sm: "14vw" },
+              mb: { xs: 2, sm: 0 },
+            }}
           />
           <TextField
             label="Quantity"
@@ -121,7 +145,10 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
             value={formData.quantity}
             onChange={handleChange}
             // required
-            style={{ width: "14vw" }}
+            sx={{
+              width: { xs: "90vw", sm: "14vw" },
+              mb: { xs: 2, sm: 0 },
+            }}
           />
           <TextField
             label="Location"
@@ -130,13 +157,27 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
             value={formData.location}
             onChange={handleChange}
             // required
-            style={{ width: "14vw" }}
+            sx={{
+              width: { xs: "90vw", sm: "14vw" },
+              mb: { xs: 2, sm: 0 },
+            }}
           />
-        </div>
-        <Button variant="contained" color="primary" type="submit" style={{backgroundColor:"black",height:"40px", marginRight:"20px"}}>
+        </Box>
+        <Button
+          variant="contained"
+          color="primary"
+          type="submit"
+          sx={{
+            backgroundColor: "black",
+            height: "40px",
+            marginRight: { xs: 0, sm: "20px" },
+            mt: { xs: 2, sm: 0 },
+            alignSelf: { xs: "center", sm: "flex-start" },
+          }}
+        >
           Submit
         </Button>
-      </div>
+      </Box>
     </Box>
   );
 };

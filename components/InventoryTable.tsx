@@ -474,6 +474,7 @@ export default function InventoryTable({
                     {["id", "name", "sku", "price", "quantity", "location"].map(
                       (field) => (
                         <TableCell
+                        
                           style={{ textAlign: "center" }}
                           key={field}
                           component="th"
