@@ -80,7 +80,7 @@ export const InventoryForm: React.FC<{ fetchData: () => void }> = ({
       {/* if no sku, alert the user */}
       {isNoSKU && (
         <Alert variant="filled" severity="error">
-          This is a filled error Alert.
+          Please add product SKU number!
         </Alert>
       )}
       <Box
