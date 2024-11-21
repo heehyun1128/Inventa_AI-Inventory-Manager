@@ -14,11 +14,15 @@ export const addToInventory = (picDescription: string, qty: string) => {
   const res: any = picDescription;
   console.log(picDescription);
 
-  const cleanedRes = res?.object
-    .replace(/```json/g, "")
-    .replace(/```/g, "")
-    .replace(/\n/g, "")
-    .trim();
+  let cleanedRes = "";
+  if (res?.object) {
+    cleanedRes = res?.object
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .replace(/\n/g, "")
+      .trim();
+  }
+
   const jsonObject = JSON.parse(cleanedRes);
   jsonObject["quantity"] = Number(qty);
   console.log(jsonObject);
@@ -73,7 +77,7 @@ export const ImageUploader: React.FC = () => {
 
   return (
     <>
-    {/* inventory successfully updated - render success alert */}
+      {/* inventory successfully updated - render success alert */}
       {successAlert && (
         <div
           style={{
@@ -87,7 +91,7 @@ export const ImageUploader: React.FC = () => {
           <Alert icon={<CheckIcon fontSize="inherit" />} severity="success">
             Successfully updated inventory!
           </Alert>
-          
+
           <Button
             style={{
               cursor: "pointer",
@@ -99,10 +103,10 @@ export const ImageUploader: React.FC = () => {
             }}
             onClick={() => {
               setSuccessAlert(false);
-              setPicDescription("")
-              setQty("")
-              setImage("")
-              setFile(null)
+              setPicDescription("");
+              setQty("");
+              setImage("");
+              setFile(null);
             }}
           >
             Adding another item?
@@ -236,18 +240,20 @@ export const ImageUploader: React.FC = () => {
                       justifyContent: "center",
                     }}
                   >
-                    <h2 style={{ marginBottom: "16px" }}>
-                      Updating stock unit #
-                      {
-                        JSON.parse(
-                          (picDescription as any).object
-                            .replace(/```json/g, "")
-                            .replace(/```/g, "")
-                            .replace(/\n/g, "")
-                            .trim()
-                        ).sku
-                      }
-                    </h2>
+                    {(picDescription as any)?.object && (
+                      <h2 style={{ marginBottom: "16px" }}>
+                        Updating stock unit #
+                        {
+                          JSON.parse(
+                            (picDescription as any)?.object
+                              .replace(/```json/g, "")
+                              .replace(/```/g, "")
+                              .replace(/\n/g, "")
+                              .trim()
+                          ).sku
+                        }
+                      </h2>
+                    )}
                     <h4 style={{ marginBottom: "16px" }}>Quantity</h4>
                     <input
                       style={{
@@ -255,10 +261,8 @@ export const ImageUploader: React.FC = () => {
                         borderRadius: "10px",
                         padding: "10px",
                         marginBottom: "16px",
-                        
                       }}
                       type="text"
-                    
                       placeholder="quantity"
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}

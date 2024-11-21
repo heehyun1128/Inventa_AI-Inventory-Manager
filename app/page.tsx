@@ -11,8 +11,8 @@ export default function Home() {
   const router = useRouter();
   return (
     <div className="home-background">
-      <h1 className="puff-in-bottom">iNVENTa</h1>
-      <h2 className="focus-in-contract">Your Inventory Manager</h2>
+      <h1 className="puff-in-bottom home-main-text">iNVENTa</h1>
+      <h2 className="focus-in-contract home-sub-text">Your Inventory Manager</h2>
       <div style={{display:"flex"}}>
       <SignedOut>
         <Link href="/sign-in">
@@ -28,7 +28,7 @@ export default function Home() {
           style={{
             padding: "15px 40px",
             borderRadius: "1rem",
-            color:"white",
+            // color:"white",
             cursor:"pointer"
           }}
           className="home-btn slide-in-bottom"

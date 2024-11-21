@@ -18,7 +18,7 @@ const Search: React.FC = () => {
         Add Item to Inventory
       </h1>
       <p className="text-focus-in">
-        Upload a Picture Below and Uppdate Your Inventory Instantly with Inventa
+        Upload a Picture Below and Update Your Inventory Instantly with Inventa
       </p>
       <div
         style={{
