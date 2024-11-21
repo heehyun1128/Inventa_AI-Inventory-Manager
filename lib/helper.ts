@@ -1,10 +1,14 @@
 export const parsePicDescription = (description: string) => {
     try {
-      const jsonStr = (description as any).object
+      let jsonStr=""
+      if ((description as any).object){
+        jsonStr = (description as any).object
         .replace(/```json/g, "")
         .replace(/```/g, "")
         .replace(/\n/g, "")
         .trim();
+      }
+     
   
       return JSON.parse(jsonStr);
     } catch (error) {
