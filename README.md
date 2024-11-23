@@ -1,4 +1,5 @@
 # 📦 INVENTA AI Inventory Manager
+
 # Road Map
 
   - Set up a Next.js project with Material UI components
@@ -19,6 +20,9 @@
 
 - TypeScript, NextJS, OPENAI/GPT Vision API, React Camera Pro, Firebase, Material UI
 
+# Legal
+All rights reserved. Any use, distribution, or modification of the code is not permitted without explicit written permission from the owner.  
+You must notify the owner before using this repository in any way.
 
 # Project Overview
 
